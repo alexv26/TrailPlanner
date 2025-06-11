@@ -1,0 +1,24 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage.jsx";
+import CreatePlan from "./pages/CreatePlan.jsx";
+import About from "./pages/About.jsx";
+import NavigationBar from "./components/NavigationBar.jsx";
+import "./App.css";
+
+function App() {
+  return (
+    <Router>
+      <div className="background-image" />
+      <NavigationBar />
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/plan" element={<CreatePlan />}></Route>
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default App;
