@@ -16,7 +16,7 @@ app.get("/nearby-hospitals", (req, res) => {
     return res.status(400).json({ error: "Missing coordinates" });
 
   // 50 mile radius (80467 meters)
-  const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=80467&type=hospital&key=${GOOGLE_API_KEY}`;
+  const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=48280&type=hospital&key=${GOOGLE_API_KEY}`;
 
   https
     .get(apiUrl, (apiRes) => {

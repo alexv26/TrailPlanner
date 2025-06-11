@@ -27,12 +27,11 @@ const mockFormData = {
   difficulty: "Hard",
   allTrailsLink:
     "https://www.alltrails.com/trail/us/new-hampshire/mount-lafayette",
-  trailhead: "",
-  distanceGain: "",
-  elevationGain: "",
-  activityTime: "",
-  topoMap:
-    "https://www.trailforks.com/trails/falling-waters-old-bridle-path-loop/",
+  trailhead: "Mount Lafayette via Old Bridle Path",
+  distanceGain: "7.6 mi",
+  elevationGain: "3,526 ft",
+  activityTime: "5h 55m",
+  topoMap: "",
   departure: "7:00 AM from the Outdoor Adventures office",
   returnTime: "5:30 PM",
   mealBreaks:
@@ -173,8 +172,26 @@ function CreatePlan() {
       return R * c; // Distance in miles
     }
 
+    const excludeTerms = [
+      "va",
+      "chiropractor",
+      "chiropractic",
+      "surgeon",
+      "surgery",
+      "birthing",
+      "orthopedics",
+      "sports medicine",
+      "physical therapy",
+    ];
+
     return hospitals
-      .filter((hospital) => hospital.rating && hospital.rating >= 3.5)
+      .filter((hospital) => {
+        const name = hospital.name?.toLowerCase() || "";
+        return (
+          hospital.rating >= 3.5 &&
+          !excludeTerms.some((term) => name.includes(term))
+        );
+      })
       .map((hospital) => {
         const hLat = hospital.geometry.location.lat;
         const hLng = hospital.geometry.location.lng;
@@ -315,11 +332,18 @@ function CreatePlan() {
     }
   }, [page]);
 
+  const hasFetchedHospitals = useRef(false);
+
   useEffect(() => {
-    if (page === 7 && formData.trailheadAddress) {
+    if (
+      page === 7 &&
+      formData.trailheadAddress &&
+      !hasFetchedHospitals.current
+    ) {
       fetchNearestHospitals(formData.trailheadAddress);
+      hasFetchedHospitals.current = true;
     }
-  }, [page]);
+  }, [page, formData.trailheadAddress]);
 
   // New function to generate PDF
   function generatePDF(formData) {
@@ -451,6 +475,7 @@ function CreatePlan() {
     addText("Meal Plan", formData.mealPlan);
 
     addSectionTitle("Safety & Emergency Plan");
+    addText("Nearest Hospitals", formData.nearestHospital);
     addText("Emergency Contact", formData.emergencyContact);
     addText("Weather Plan", formData.weatherPlan);
     addText("Injury Plan", formData.injuryPlan);
@@ -793,13 +818,25 @@ function CreatePlan() {
             <label>
               Nearest Hospitals:
               <textarea
-                name="weatherPlan"
+                name="nearestHospital"
                 value={formData.nearestHospital}
                 onChange={handleChange}
                 placeholder="Please enter the addresses of the nearest hospitals here."
                 required
               />
             </label>
+            <p
+              style={{
+                marginTop: "-10px",
+                marginBottom: "5px",
+                color: "yellow",
+                fontSize: "14px",
+                fontWeight: "bold",
+              }}
+            >
+              Warning: this list is auto generated. please verify these options
+              are valid.
+            </p>
             <label>
               Weather Plan:
               <textarea
