@@ -20,7 +20,6 @@ const mockFormData = {
   leaders: "Alex Velsmid and Thomas Gregory",
   startDate: "2025-07-15",
   endDate: "2025-07-15",
-  location: "Franconia, NH",
   groupSize: "8",
   emergencyContact: `Alexander Velsmid: 123-274-2927\nThomas Gregory: 198-384-2842`,
   permits: "White Mountain National Forest Day Pass - $5 per vehicle",
@@ -265,12 +264,79 @@ function CreatePlan() {
     }
   }
 
+  async function generateMealPlan() {
+    const start = new Date(formData.startDate);
+    const end = new Date(formData.endDate);
+    const diffTime = end - start;
+    const num_days = diffTime / (1000 * 60 * 60 * 24) + 1;
+    const num_nights = num_days - 1;
+    const num_participants = parseInt(formData.groupSize, 10);
+
+    // Show loading feedback
+    setFormData((prev) => ({
+      ...prev,
+      mealPlan: "Generating meal plan...",
+    }));
+
+    try {
+      const response = await fetch("http://localhost:3003/generate-meal-plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+        body: JSON.stringify({
+          num_nights,
+          num_participants,
+          timestamp: Date.now(), // force freshness
+        }),
+      });
+
+      const data = await response.json();
+
+      // Check if the response contains mealPlan or result
+      let mealPlan;
+      if (data.mealPlan) {
+        // This matches the updated Express server structure
+        mealPlan = data.mealPlan;
+      } else if (typeof data.result === "string") {
+        // Fallback to old expected structure
+        mealPlan = data.result;
+      } else {
+        // Handle other cases (like error responses)
+        throw new Error("Invalid response format");
+      }
+
+      // Post-processing: extract only the relevant days
+      const startIndex = mealPlan.indexOf("Day 1:");
+      const trimmedTop =
+        startIndex !== -1 ? mealPlan.slice(startIndex) : mealPlan;
+
+      const cutPhrase = `Day ${num_days + 1}:`;
+      const endIndex = trimmedTop.indexOf(cutPhrase);
+      const trimmedMealPlan =
+        endIndex !== -1 ? trimmedTop.slice(0, endIndex).trim() : trimmedTop;
+
+      setFormData((prev) => ({
+        ...prev,
+        mealPlan: trimmedMealPlan || "No valid meal plan generated.",
+      }));
+    } catch (err) {
+      console.error("Failed to generate meal plan:", err);
+      setFormData((prev) => ({
+        ...prev,
+        mealPlan: "Failed to generate meal plan. Please try again.",
+      }));
+    }
+  }
+
   const handleChange = (e) => {
     const { name, type, checked, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
   const handleNext = (e) => {
@@ -346,7 +412,7 @@ function CreatePlan() {
   }, [page, formData.trailheadAddress]);
 
   // New function to generate PDF
-  function generatePDF(formData) {
+  async function generatePDF(formData) {
     const doc = new jsPDF();
     const lineHeight = 10;
     const pageHeight = doc.internal.pageSize.height;
@@ -405,10 +471,13 @@ function CreatePlan() {
       }
 
       // Draw label
+
       doc.setFont("helvetica", "bold");
       doc.setFontSize(11);
-      doc.text(`${label}:`, margin, y);
-      y += 5;
+      if (label) {
+        doc.text(`${label}:`, margin, y);
+        y += 5;
+      }
 
       // Draw wrapped lines
       doc.setFont("helvetica", "normal");
@@ -423,12 +492,16 @@ function CreatePlan() {
       for (let i = 1; i <= totalPages; i++) {
         doc.setPage(i);
         doc.setFontSize(10);
-        doc.setTextColor(150);
-        doc.text(
-          `Page ${i} of ${totalPages}`,
-          pageHeight - 40,
-          pageHeight - 10
-        );
+        doc.setTextColor(150); // Page number
+
+        doc.text(`Page ${i} of ${totalPages}`, margin, pageHeight - 10); // Banner message
+
+        const bannerText =
+          "This trip plan was generated through the TrailPlanner website, developed by Alexander Velsmid (https://github.com/alexv26)";
+        const bannerY = pageHeight - 5;
+        doc.setFontSize(8);
+        doc.setTextColor(100);
+        doc.text(bannerText, margin, bannerY);
       }
     };
 
@@ -442,19 +515,19 @@ function CreatePlan() {
       `${convertDate(formData.startDate)} - ${convertDate(formData.endDate)}`
     );
     addText("Group Size", formData.groupSize);
-    addText("Location", formData.location);
-    addText("AllTrails Link", formData.allTrailsLink);
-    addText("Necessary Permits", formData.permits);
 
     addSectionTitle("Route Information");
     addText("Trailhead", formData.trailhead);
+    addText("Trailhead Address", formData.trailheadAddress);
+    addText("AllTrails Link", formData.allTrailsLink);
     addText("Distance", formData.distanceGain);
     addText("Elevation Gain", formData.elevationGain);
     addText("Estimated Activity Time", formData.activityTime);
     addText("Difficulty", formData.difficulty);
-    addText("Map", formData.topoMap);
+    addText("Trail Map", formData.topoMap);
     addText("Alternative Route", formData.altRoute);
     addText("Backup Exit Points", formData.backupExit);
+    addText("Necessary Permits", formData.permits);
 
     if (formData.startDate !== formData.endDate) {
       addSectionTitle("Overnight Logistics");
@@ -467,12 +540,14 @@ function CreatePlan() {
       );
     }
 
-    addSectionTitle("Logistics");
+    addSectionTitle("Scheduling Logistics");
     addText("Departure Time & Place", formData.departure);
     addText("Estimated Return Time", formData.returnTime);
     addText("Meal Breaks", formData.mealBreaks);
     addText("Overnight Plans", formData.overnightPlans);
-    addText("Meal Plan", formData.mealPlan);
+
+    addSectionTitle("Meal Plan");
+    addText("", formData.mealPlan);
 
     addSectionTitle("Safety & Emergency Plan");
     addText("Nearest Hospitals", formData.nearestHospital);
@@ -548,17 +623,6 @@ function CreatePlan() {
                 />
               </label>
             </div>
-
-            <label>
-              Location:
-              <input
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="e.g. Franconia, NH"
-                required
-              />
-            </label>
           </>
         )}
 
@@ -579,6 +643,7 @@ function CreatePlan() {
               Leader Emergency Contact Info:
               <textarea
                 name="emergencyContact"
+                rows="2"
                 value={formData.emergencyContact}
                 onChange={handleChange}
                 placeholder={emergencyContactPlaceholder}
@@ -738,15 +803,6 @@ function CreatePlan() {
                 <option value="Very Hard">Very Hard</option>
               </select>
             </label>
-            <label>
-              Map:
-              <input
-                name="topoMap"
-                value={formData.topoMap}
-                placeholder="Find trail maps at https://www.trailforks.com/"
-                onChange={handleChange}
-              />
-            </label>
           </>
         )}
 
@@ -803,12 +859,17 @@ function CreatePlan() {
               Meal Plan:
               <textarea
                 name="mealPlan"
+                rows="15"
                 value={formData.mealPlan}
                 onChange={handleChange}
                 placeholder={mealPlanPlaceholder}
                 required
               />
             </label>
+            <button type="button" onClick={generateMealPlan}>
+              Have AI generate a meal plan
+            </button>
+            <button>Explore existing mealplans</button>
           </>
         )}
 

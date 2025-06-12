@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"node src/server/TrailInfoAPI.cjs\" \"node src/server/NearestHospitalAPI.cjs\"",
+    "dev": "concurrently \"vite\" \"node src/server/TrailInfoAPI.cjs\" \"node src/server/NearestHospitalAPI.cjs\" \"node src/server/GPTMealPlanAPI.cjs\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -15,11 +15,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
+    "leaflet": "^1.9.4",
+    "node-fetch": "^3.3.2",
+    "openai": "^5.3.0",
     "process": "^0.11.10",
     "puppeteer": "^24.10.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.6.2"
   },
   "devDependencies": {
