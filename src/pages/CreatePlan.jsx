@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import "./page_styles/CreatePlan.css";
+import styles from "./page_styles/CreatePlan.module.css";
+
+const showMockButton = true;
 
 const emergencyContactPlaceholder =
   "e.g. \nAlexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
@@ -514,7 +516,7 @@ function CreatePlan() {
       "Trip Dates",
       `${convertDate(formData.startDate)} - ${convertDate(formData.endDate)}`
     );
-    addText("Group Size", formData.groupSize);
+    addText("Number of participants", formData.groupSize);
 
     addSectionTitle("Route Information");
     addText("Trailhead", formData.trailhead);
@@ -566,20 +568,19 @@ function CreatePlan() {
     if (viewer) {
       viewer.src = pdfUrl;
     }
-
-    //doc.save(`${formData.tripName || "trip-plan"}.pdf`);
   }
 
   return (
-    <div className="form-container">
+    <div className={styles["form-container"]}>
       <form onSubmit={page === finalPage - 1 ? handleSubmit : handleNext}>
         {page === 1 && (
           <>
             <h2>Create a Trip Plan</h2>
-            <button type="button" onClick={() => setFormData(mockFormData)}>
-              Fill with Mock Data
-            </button>
-
+            {showMockButton && (
+              <button type="button" onClick={() => setFormData(mockFormData)}>
+                Fill with Mock Data
+              </button>
+            )}
             <label>
               Trip Name:
               <input
@@ -600,7 +601,7 @@ function CreatePlan() {
                 required
               />
             </label>
-            <div className="date-range">
+            <div className={styles["date-range"]}>
               <label>
                 Start Date:
                 <input
@@ -630,7 +631,7 @@ function CreatePlan() {
           <>
             <h2>Group and Logistic Information</h2>
             <label>
-              Group Size:
+              Number of participants:
               <input
                 name="groupSize"
                 value={formData.groupSize}
@@ -709,7 +710,6 @@ function CreatePlan() {
                 name="campsiteHasBathrooms"
                 checked={formData.campsiteHasBathrooms}
                 onChange={handleChange}
-                required
               />
             </label>
           </>
@@ -968,7 +968,7 @@ function CreatePlan() {
           </>
         )}
 
-        <div className="form-navigation">
+        <div className={styles["form-navigation"]}>
           {page > 1 && page < finalPage + 1 && (
             <button type="button" onClick={handleBack}>
               Back
