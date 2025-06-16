@@ -25,6 +25,8 @@ input {
   border: none;
   border-radius: 6px;
   width: 100%;
+  background-color: #1e1e1e;
+  color: white;
 }
 
 input[type="url"],
@@ -53,19 +55,22 @@ button {
 }
 
 .date-range input {
-  background-color: white;
-  color: black;
+  background-color: #1e1e1e;
 }
 
 .date-range label {
   flex: 1;
 }
 
+.date-range input::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* Inverts the icon color */
+  cursor: pointer;
+}
+
 textarea {
   display: block;
-
-  background-color: white;
-  color: black;
+  background-color: #1e1e1e;
+  color: white;
   font-size: 1rem;
   margin-top: 5px;
   border: none;
@@ -75,4 +80,12 @@ textarea {
   width: 102%;
   box-sizing: border-box; /* Ensures padding is included in width */
   resize: vertical; /* Optional: let user resize vertically */
+}
+
+.custom-select {
+  background-color: #1e1e1e;
+  color: white;
+  border: 1px solid #444;
+  padding: 8px;
+  border-radius: 4px;
 }

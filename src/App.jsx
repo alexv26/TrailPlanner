@@ -4,6 +4,8 @@ import CreatePlan from "./pages/CreatePlan.jsx";
 import About from "./pages/About.jsx";
 import NavigationBar from "./components/NavigationBar.jsx";
 import Resources from "./pages/Resources.jsx";
+import MealPlans from "./pages/MealPlansPage.jsx";
+import ExplorePastTrips from "./pages/ExplorePastTrips.jsx";
 import "./App.css";
 
 function App() {
@@ -17,6 +19,8 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/plan" element={<CreatePlan />}></Route>
           <Route path="/resources" element={<Resources />}></Route>
+          <Route path="/mealplans" element={<MealPlans />}></Route>
+          <Route path="/explore" element={<ExplorePastTrips />}></Route>
         </Routes>
       </div>
     </Router>

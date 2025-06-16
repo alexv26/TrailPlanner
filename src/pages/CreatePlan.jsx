@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
@@ -113,6 +112,7 @@ function CreatePlan() {
     campsiteAddress: "",
     nearestHospital: "",
   });
+  const [publishForm, setPublishForm] = useState(false);
 
   async function fetchTrailheadInfo(trailName) {
     if (!trailName) {
@@ -341,6 +341,10 @@ function CreatePlan() {
     }));
   };
 
+  const handleCheckbox = (e) => {
+    setPublishForm(e.target.checked);
+  };
+
   const handleNext = (e) => {
     e.preventDefault();
 
@@ -372,11 +376,36 @@ function CreatePlan() {
     setPage((prev) => prev - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Final Submitted Plan:", formData);
     setPage((prev) => prev + 1);
-    // handle submission logic here (e.g., API request)
+
+    if (publishForm) {
+      // Removing names and emergency contact so leaders stay anonymous
+      const { emergencyContact, leaders, campsitePrice, ...anonymousFormData } =
+        formData;
+      try {
+        const response = await fetch("http://localhost:3004/trips", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(anonymousFormData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to submit trip plan");
+        }
+
+        console.log("✅ Trip plan submitted successfully!");
+      } catch (error) {
+        console.error("❌ Error submitting trip plan:", error);
+        alert(
+          "There was an error submitting your trip plan. Please try again."
+        );
+      }
+    }
   };
 
   const [loading, setLoading] = useState(false);
@@ -794,7 +823,7 @@ function CreatePlan() {
                 name="difficulty"
                 value={formData.difficulty}
                 onChange={handleChange}
-                required
+                className={styles["custom-select"]}
               >
                 <option value="">Select</option>
                 <option value="Easy">Easy</option>
@@ -869,7 +898,12 @@ function CreatePlan() {
             <button type="button" onClick={generateMealPlan}>
               Have AI generate a meal plan
             </button>
-            <button>Explore existing mealplans</button>
+            <button
+              type="button"
+              onClick={() => window.open("/mealplans", "_blank")}
+            >
+              Explore existing mealplans
+            </button>
           </>
         )}
 
@@ -939,6 +973,33 @@ function CreatePlan() {
             <p>
               NOTE: If a contingency should be enacted before departure, a new
               trip plan should be formed.
+            </p>
+            <label
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                marginTop: "20px",
+              }}
+            >
+              <b>Publish form to public database?</b>
+              <input
+                style={{ width: "15px", height: "auto" }}
+                type="checkbox"
+                name="campsiteHasBathrooms"
+                checked={publishForm}
+                onChange={handleCheckbox}
+              />
+            </label>
+            <p
+              style={{
+                color: "yellow",
+                fontWeight: "bold",
+                marginTop: "-10px",
+              }}
+            >
+              Note: names and emergency contact info is removed if you chose to
+              share your trip plan.
             </p>
           </>
         )}
