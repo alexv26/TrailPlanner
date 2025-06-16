@@ -12,6 +12,7 @@
 .hero-text h1 {
   font-size: 6rem;
   margin-bottom: 0.5rem;
+  color: limegreen;
 }
 
 .hero-text p {
@@ -19,7 +20,7 @@
 }
 
 .hero-text a {
-  background-color: limegreen;
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 6px;
   padding: 4px;
   text-decoration: none;
