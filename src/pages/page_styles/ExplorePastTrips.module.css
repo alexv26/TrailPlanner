@@ -21,6 +21,7 @@
 
 .tripTile:hover {
   background-color: #e6f0ff;
+  color: black;
 }
 
 .pagination {
