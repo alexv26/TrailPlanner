@@ -6,6 +6,7 @@ import NavigationBar from "./components/NavigationBar.jsx";
 import Resources from "./pages/Resources.jsx";
 import MealPlans from "./pages/MealPlansPage.jsx";
 import ExplorePastTrips from "./pages/ExplorePastTrips.jsx";
+import TripDetails from "./pages/TripDetails.jsx";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/mealplans" element={<MealPlans />}></Route>
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
+          <Route path="/trip/:tripIndex" element={<TripDetails />}></Route>
         </Routes>
       </div>
     </Router>

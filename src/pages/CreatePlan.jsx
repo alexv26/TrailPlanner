@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
-const showMockButton = true;
+const showMockButton = false;
 
 const emergencyContactPlaceholder =
   "e.g. \nAlexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
@@ -78,7 +79,9 @@ function convertDate(releaseDate) {
 function CreatePlan() {
   const finalPage = 7;
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState({
+  const { state } = useLocation();
+  const tripData = state?.trip || {};
+  const initialForm = {
     tripName: "",
     leaders: "",
     startDate: "",
@@ -111,8 +114,33 @@ function CreatePlan() {
     campsitePrice: "",
     campsiteAddress: "",
     nearestHospital: "",
+    placeholderImg: "",
+  };
+
+  // Merge trip data into the initial form
+  const [formData, setFormData] = useState({
+    ...initialForm,
+    ...tripData, // overwrites defaults with any matching fields from tripData
   });
+
   const [publishForm, setPublishForm] = useState(false);
+
+  const getPixabayImage = async (query) => {
+    try {
+      const res = await fetch(
+        `https://pixabay.com/api/?key=${
+          import.meta.env.VITE_PIXABAY_API_KEY
+        }&q=${encodeURIComponent(
+          query
+        )}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3`
+      );
+      const data = await res.json();
+      return data.hits?.[0]?.webformatURL || null;
+    } catch (err) {
+      console.error("Image fetch error:", err);
+      return null;
+    }
+  };
 
   async function fetchTrailheadInfo(trailName) {
     if (!trailName) {
@@ -121,7 +149,6 @@ function CreatePlan() {
     }
 
     try {
-      console.log("Fetching trailhead info for:", trailName);
       const response = await fetch(
         `http://localhost:${
           import.meta.env.VITE_TRAIL_INFO_API_PORT
@@ -139,7 +166,6 @@ function CreatePlan() {
       }
 
       if (data && (data.name || data.address)) {
-        console.log("Trailhead data:", data);
         const fullTrailheadAddress = `${data.location.lat},${data.location.lng}\n${data.address}`;
         setFormData((prev) => ({
           ...prev,
@@ -368,12 +394,13 @@ function CreatePlan() {
   const handleBack = () => {
     if (page == 4) {
       if (formData.startDate === formData.endDate) {
-        setPage((prev) => prev - 1);
-      } else {
         setPage((prev) => prev - 2);
+      } else {
+        setPage((prev) => prev - 1);
       }
+    } else {
+      setPage((prev) => prev - 1);
     }
-    setPage((prev) => prev - 1);
   };
 
   const handleSubmit = async (e) => {
@@ -382,9 +409,23 @@ function CreatePlan() {
     setPage((prev) => prev + 1);
 
     if (publishForm) {
+      // Wait for the image URL before setting form data
+      const imgUrl = await getPixabayImage(`${formData.tripName} nature`);
+
+      setFormData((prev) => ({
+        ...prev,
+        placeholderImg: imgUrl,
+      }));
+
+      console.log("Placeholder img:", imgUrl);
+
       // Removing names and emergency contact so leaders stay anonymous
       const { emergencyContact, leaders, campsitePrice, ...anonymousFormData } =
-        formData;
+        {
+          ...formData,
+          placeholderImg: imgUrl,
+        };
+
       try {
         const response = await fetch("http://localhost:3004/trips", {
           method: "POST",
@@ -412,11 +453,11 @@ function CreatePlan() {
 
   useEffect(() => {
     const name = formData.trailhead;
-    if (page !== 4 || !name || name.length < 3) return;
+    if (page !== 4 || !name || name.length < 3 || formData.trailheadAddress)
+      return;
 
     const delay = 800;
     const handler = setTimeout(() => {
-      console.log("Fetching trailhead info for:", name);
       fetchTrailheadInfo(name);
     }, delay);
 
@@ -435,14 +476,14 @@ function CreatePlan() {
     if (
       page === 7 &&
       formData.trailheadAddress &&
-      !hasFetchedHospitals.current
+      !hasFetchedHospitals.current &&
+      !formData.nearestHospital
     ) {
       fetchNearestHospitals(formData.trailheadAddress);
       hasFetchedHospitals.current = true;
     }
   }, [page, formData.trailheadAddress]);
 
-  // New function to generate PDF
   async function generatePDF(formData) {
     const doc = new jsPDF();
     const lineHeight = 10;

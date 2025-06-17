@@ -1,6 +1,6 @@
 import styles from "./page_styles/About.module.css";
-import canyon from "../canyon.jpg";
-import alex from "../alex.jpg";
+import canyon from "../assets/canyon.jpg";
+import alex from "../assets/alex.jpg";
 
 export default function About() {
   return (

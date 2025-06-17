@@ -1,195 +1,20 @@
-import { useState, useEffect } from "react";
-import jsPDF from "jspdf";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./page_styles/ExplorePastTrips.module.css";
 
+const PAGE_SIZE = 8;
+
 export default function ExplorePastTrips() {
-  function convertDate(releaseDate) {
-    const [year, month, day] = releaseDate.split("-");
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-
-    const monthIndex = parseInt(month, 10) - 1; // convert "01" to 0-based index
-    const monthName = months[monthIndex];
-
-    // Remove leading zero from day if present
-    const dayNumber = parseInt(day, 10);
-
-    return `${monthName} ${dayNumber}, ${year}`;
-  }
-  async function generatePDF(formData) {
-    const doc = new jsPDF();
-    const lineHeight = 10;
-    const pageHeight = doc.internal.pageSize.height;
-    const margin = 15;
-    const maxWidth = 180;
-    let y = margin;
-
-    const drawLine = () => {
-      doc.setDrawColor(200);
-      doc.line(margin, y, pageHeight - margin, y);
-      y += 5;
-    };
-
-    const addHeader = () => {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(32);
-      doc.text(formData.tripName, margin, y);
-      y += 10;
-    };
-
-    const addSectionTitle = (title) => {
-      // Add extra space before section title
-      y += 5; // increase this value as needed
-      if (y > pageHeight - 30) {
-        doc.addPage();
-        y = margin;
-      }
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(0, 102, 204);
-      doc.text(title, margin, y);
-      y += 6;
-      doc.setTextColor(0, 0, 0);
-    };
-
-    const addText = (label, value) => {
-      if (!value) value = "N/A";
-
-      // Split manually by line breaks first
-      const paragraphs = value.split("\n");
-      let totalHeight = 5; // For label
-
-      // Calculate how much space all wrapped lines will take
-      const wrappedLines = paragraphs.map((p) =>
-        doc.splitTextToSize(p, maxWidth)
-      );
-      wrappedLines.forEach((lines) => {
-        totalHeight += lines.length * 6;
-      });
-
-      // Add page if needed
-      if (y + totalHeight > pageHeight - margin) {
-        doc.addPage();
-        y = margin;
-      }
-
-      // Draw label
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      if (label) {
-        doc.text(`${label}:`, margin, y);
-        y += 5;
-      }
-
-      // Draw wrapped lines
-      doc.setFont("helvetica", "normal");
-      wrappedLines.forEach((lines) => {
-        doc.text(lines, margin, y);
-        y += lines.length * 6;
-      });
-    };
-
-    const addFooter = () => {
-      const totalPages = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.setTextColor(150); // Page number
-
-        doc.text(`Page ${i} of ${totalPages}`, margin, pageHeight - 10); // Banner message
-
-        const bannerText =
-          "This trip plan was generated through the TrailPlanner website, developed by Alexander Velsmid (https://github.com/alexv26)";
-        const bannerY = pageHeight - 5;
-        doc.setFontSize(8);
-        doc.setTextColor(100);
-        doc.text(bannerText, margin, bannerY);
-      }
-    };
-
-    // Generate the PDF
-    addHeader();
-
-    addSectionTitle("Trip Overview");
-    addText(
-      "Trip Dates",
-      `${convertDate(formData.startDate)} - ${convertDate(formData.endDate)}`
-    );
-    addText("Number of participants", formData.groupSize);
-
-    addSectionTitle("Route Information");
-    addText("Trailhead", formData.trailhead);
-    addText("Trailhead Address", formData.trailheadAddress);
-    addText("AllTrails Link", formData.allTrailsLink);
-    addText("Distance", formData.distanceGain);
-    addText("Elevation Gain", formData.elevationGain);
-    addText("Estimated Activity Time", formData.activityTime);
-    addText("Difficulty", formData.difficulty);
-    addText("Trail Map", formData.topoMap);
-    addText("Alternative Route", formData.altRoute);
-    addText("Backup Exit Points", formData.backupExit);
-    addText("Necessary Permits", formData.permits);
-
-    if (formData.startDate !== formData.endDate) {
-      addSectionTitle("Overnight Logistics");
-      addText("Campsite", formData.campsiteName);
-      addText("Campsite Address", formData.campsiteAddress);
-      addText("Campsite Price", formData.campsitePrice);
-      addText(
-        "Campsite Has Bathroom Access",
-        formData.campsiteHasBathrooms ? "Yes" : "No"
-      );
-    }
-
-    addSectionTitle("Scheduling Logistics");
-    addText("Departure Time & Place", formData.departure);
-    addText("Estimated Return Time", formData.returnTime);
-    addText("Meal Breaks", formData.mealBreaks);
-    addText("Overnight Plans", formData.overnightPlans);
-
-    addSectionTitle("Meal Plan");
-    addText("", formData.mealPlan);
-
-    addSectionTitle("Safety & Emergency Plan");
-    addText("Nearest Hospitals", formData.nearestHospital);
-    addText("Weather Plan", formData.weatherPlan);
-    addText("Injury Plan", formData.injuryPlan);
-    addText("Late Return Protocol", formData.lateReturn);
-
-    addFooter();
-
-    const pdfBlob = doc.output("blob");
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    // Display in iframe
-    const viewer = document.getElementById("pdfViewer");
-    if (viewer) {
-      viewer.src = pdfUrl;
-    }
-  }
-  const [page, setPage] = useState(1);
   const [tripPlans, setTripPlans] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:3004/trips")
       .then((res) => res.json())
       .then((data) => {
-        setTripPlans(data); // Expecting an array of meal plan strings
+        setTripPlans(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -198,33 +23,104 @@ export default function ExplorePastTrips() {
       });
   }, []);
 
-  const handleNext = () => {
-    if (page < tripPlans.length) setPage(page + 1);
+  const totalPages = Math.ceil(tripPlans.length / PAGE_SIZE);
+  const currentTrips = tripPlans.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  );
+
+  const calculateTripLength = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    const diffTime = endDate - startDate;
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
   };
 
-  const handlePrev = () => {
-    if (page > 1) setPage(page - 1);
-  };
+  const renderPageButtons = () => {
+    const pages = [];
 
-  useEffect(() => {
-    console.log("Trip plan", tripPlans[page - 1]);
-    if (tripPlans.length > 0 && tripPlans[page - 1]) {
-      generatePDF(tripPlans[page - 1]);
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      if (page > 3) pages.push("...");
+      const middlePages = [
+        Math.max(2, page - 1),
+        page,
+        Math.min(totalPages - 1, page + 1),
+      ].filter((p, i, self) => self.indexOf(p) === i);
+      pages.push(...middlePages);
+      if (page < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
     }
-  }, [tripPlans, page]); // Add dependencies
+
+    return pages.map((p, i) =>
+      typeof p === "number" ? (
+        <button
+          key={i}
+          className={`${styles.pageButton} ${page === p ? styles.active : ""}`}
+          onClick={() => setPage(p)}
+        >
+          {p}
+        </button>
+      ) : (
+        <span key={i} className={styles.ellipsis}>
+          …
+        </span>
+      )
+    );
+  };
+
+  if (loading) return <p>Loading trips...</p>;
 
   return (
-    <div style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}>
-      <iframe
-        id="pdfViewer"
-        title="Trip Plan PDF"
-        style={{
-          width: "100%",
-          height: "600px",
-          border: "1px solid #ccc",
-          flexGrow: 1,
-        }}
-      />
+    <div>
+      <div className={styles.tileGrid}>
+        {currentTrips.map((trip, index) => (
+          <div
+            key={index}
+            className={styles.tripTile}
+            onClick={() => navigate(`/trip/${(page - 1) * PAGE_SIZE + index}`)}
+          >
+            {trip.placeholderImg ? (
+              <img
+                src={trip.placeholderImg}
+                alt={trip.tripName}
+                className={styles.tileImage}
+              />
+            ) : (
+              <div className={styles.imagePlaceholder}>No image available</div>
+            )}
+            <h3>{trip.tripName}</h3>
+            <p>{calculateTripLength(trip.startDate, trip.endDate)}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className={styles.pagination}>
+        <button onClick={() => setPage(1)} disabled={page === 1}>
+          First
+        </button>
+        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+          Prev
+        </button>
+        {renderPageButtons()}
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page === totalPages}
+        >
+          Next
+        </button>
+        <button
+          onClick={() => setPage(totalPages)}
+          disabled={page === totalPages}
+        >
+          Last
+        </button>
+      </div>
     </div>
   );
 }
