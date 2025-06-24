@@ -401,7 +401,6 @@ function CreatePlan() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Final Submitted Plan:", formData);
     setPage((prev) => prev + 1);
     const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
     const updatedFormData = {

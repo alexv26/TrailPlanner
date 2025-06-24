@@ -1,7 +1,7 @@
 // TripTile.jsx
 import styles from "./component_styles/TripGallery.module.css";
 
-export default function TripTile({ trip, onClick }) {
+export default function TripTile({ trip, onClick, deleteMode = false }) {
   const calculateTripLength = (start, end) => {
     const startDate = new Date(start);
     const endDate = new Date(end);
@@ -13,11 +13,14 @@ export default function TripTile({ trip, onClick }) {
   return (
     <div className={styles.tripTile} onClick={onClick}>
       {trip.placeholderImg ? (
-        <img
-          src={trip.placeholderImg}
-          alt={trip.tripName}
-          className={styles.tileImage}
-        />
+        <div className={styles.imageWrapper}>
+          <img
+            src={trip.placeholderImg}
+            alt={trip.tripName}
+            className={styles.tileImage}
+          />
+          {deleteMode && <div className={styles.overlay}>×</div>}
+        </div>
       ) : (
         <div className={styles.imagePlaceholder}>No image available</div>
       )}

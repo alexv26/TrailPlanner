@@ -1,27 +1,17 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import styles from "./page_styles/TripDetails.module.css";
 
 export default function TripDetails() {
+  const location = useLocation();
+  const { trip, from } = location.state || {};
   const navigate = useNavigate();
-  const { tripIndex } = useParams();
-  const [trip, setTrip] = useState(null);
 
   const handleCopyPlan = () => {
     const { startDate, endDate, ...updatedTripForCopying } = trip;
     navigate("/plan", { state: { trip: updatedTripForCopying } });
   };
-
-  useEffect(() => {
-    fetch("http://localhost:3004/trips")
-      .then((res) => res.json())
-      .then((data) => {
-        const tripData = data[tripIndex];
-        setTrip(tripData);
-        if (tripData) generatePDF(tripData);
-      });
-  }, [tripIndex]);
 
   function convertDate(releaseDate) {
     const [year, month, day] = releaseDate.split("-");
@@ -198,11 +188,17 @@ export default function TripDetails() {
     }
   }
 
+  useEffect(() => {
+    if (trip) {
+      generatePDF(trip);
+    }
+  }, [trip]);
+
   return (
     <>
       <div className={styles["navigation"]}>
         <div className={styles["backButton"]}>
-          <a href="/explore">&lt;-- Go back</a>
+          <a href={from}>&lt;-- Go back</a>
         </div>
         <div className={styles["copyPlanButton"]}>
           <button onClick={handleCopyPlan} disabled={!trip}>

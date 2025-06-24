@@ -28,9 +28,9 @@ function NavigationBar() {
         </div>
         <div className={styles["center-content"]}>
           <Link to="/">Home</Link>
-          <Link to="/about">About Page</Link>
+          <Link to="/about">About</Link>
           <Link to="/plan">Make a Plan</Link>
-          <Link to="/explore">Explore Past Trips</Link>
+          <Link to="/explore">Trip Gallery</Link>
           <Link to="/resources">Resources</Link>
         </div>
         <div className={styles["right-content"]}>

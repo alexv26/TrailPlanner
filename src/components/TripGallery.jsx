@@ -1,15 +1,26 @@
-// TripGallery.jsx
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import TripTile from "./TripTile"; // Import the new component
+import { useNavigate, useLocation } from "react-router-dom";
+import TripTile from "./TripTile";
 import styles from "./component_styles/TripGallery.module.css";
 
-export default function TripGallery({ trips, pageSize = 8, className = "" }) {
+export default function TripGallery({
+  trips,
+  pageSize = 8,
+  className = "",
+  deleteMode = false,
+  originatingLocation = "/explore",
+}) {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
 
   const totalPages = Math.ceil(trips.length / pageSize);
   const currentTrips = trips.slice((page - 1) * pageSize, page * pageSize);
+
+  // Default click behavior: navigate to trip detail
+  const handleClick = deleteMode
+    ? (index, trip) => () => console.log("Deleting trip", trip)
+    : (index, trip) => () =>
+        navigate(`/trip`, { state: { trip, from: originatingLocation } });
 
   const renderPageButtons = () => {
     const pages = [];
@@ -49,13 +60,17 @@ export default function TripGallery({ trips, pageSize = 8, className = "" }) {
   return (
     <div>
       <div className={`${styles.tileGrid} ${className}`}>
-        {currentTrips.map((trip, index) => (
-          <TripTile
-            key={index}
-            trip={trip}
-            onClick={() => navigate(`/trip/${(page - 1) * pageSize + index}`)}
-          />
-        ))}
+        {currentTrips.map((trip, index) => {
+          const globalIndex = (page - 1) * pageSize + index;
+          return (
+            <TripTile
+              key={trip.id || index}
+              trip={trip}
+              deleteMode={deleteMode}
+              onClick={handleClick(globalIndex, trip)}
+            />
+          );
+        })}
       </div>
 
       <div className={styles.pagination}>

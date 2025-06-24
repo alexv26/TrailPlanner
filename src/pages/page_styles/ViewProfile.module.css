@@ -6,5 +6,23 @@
 .tripGallery {
   color: rgb(255, 255, 255);
   text-align: center;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.9);
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+.tripGallery h1 {
+  text-decoration: underline;
+}
+
+.tripGallery a {
+  display: inline-block; /* Needed for transform to work properly */
+  color: rgb(255, 255, 255);
+  text-decoration: underline;
+  background-color: #007bff;
+  padding: 0.4rem;
+  border-radius: 4px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.tripGallery a:hover {
+  transform: scale(1.05);
 }

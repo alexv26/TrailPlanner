@@ -20,7 +20,13 @@ export default function ExplorePastTrips() {
       });
   }, []);
 
-  if (loading) return <p>Loading trips...</p>;
+  if (loading) {
+    return (
+      <div className={styles.spinnerContainer}>
+        <div className={styles.spinner}></div>
+      </div>
+    );
+  }
 
   return (
     <>
