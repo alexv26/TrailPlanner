@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  justify-content: center;
+  height: fit-content;
+  margin-top: 180px;
+}
+
+.box {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
+
+.title h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.inputField {
+  margin-bottom: 10px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.buttons button {
+  display: flex;
+  font-weight: bold;
+  font-size: 18px;
+  width: fit-content;
+}
+
+.switchMode {
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  justify-content: center; /* optional: centers the content horizontally */
+  gap: 0.5rem; /* optional: space between <p> and <a> */
+  align-items: center; /* vertically aligns if content wraps */
+}
+.switchMode p {
+  margin: 0;
+}
+
+.switchMode a {
+  cursor: pointer;
+  color: #007bff; /* example color */
+  text-decoration: underline;
+}
+
+.warning {
+  margin-top: 10px;
+  border-radius: 12px;
+  background-color: red;
+  width: 100%; /* Make it full width of container */
+  box-sizing: border-box; /* Includes padding in width */
+  padding: 8px;
+}
+
+.warning p {
+  margin: 0; /* Remove margin */
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}

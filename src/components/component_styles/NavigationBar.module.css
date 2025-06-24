@@ -27,21 +27,91 @@
   font-size: 24px;
 }
 
-/* Force the inner div to take up full width so it can center */
 .center-content {
   display: flex;
-  justify-content: center; /* center the links */
+  justify-content: center;
   align-items: center;
-  width: 100%; /* fill available horizontal space */
-  position: absolute; /* take it out of flow so it's centered */
-  left: 50%;
-  transform: translateX(-50%);
+  flex: 1; /* take up remaining space between left and right */
+  position: static; /* removes absolute positioning */
 }
 
 .left-content {
-  justify-content: left;
-  color: #7cfc00;
+  flex: 0 0 auto;
+  color: limegreen;
 }
-.container .center-content:hover {
+
+.right-content {
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 25px;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.profile-icon-button {
+  display: inline-flex;
+  background: none;
+  border: none;
   cursor: pointer;
+  color: inherit;
+  align-items: center;
+  margin-top: 0;
+  gap: 8px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+  min-width: 120px;
+}
+
+.dropdown-menu a,
+.dropdown-menu button {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: black;
+  text-decoration: none;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu button:hover {
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.loginButton {
+  background-color: #007bff;
+  border-radius: 8px;
+  margin-bottom: 2px;
+  padding-bottom: 5px;
 }

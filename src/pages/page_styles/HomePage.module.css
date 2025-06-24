@@ -6,22 +6,23 @@
   transform: translate(-50%, -50%);
   text-align: center;
   color: white;
-  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.9);
 }
 
 .hero-text h1 {
   font-size: 6rem;
   margin-bottom: 0.5rem;
   color: limegreen;
+  text-shadow: 2px 2px 12px rgba(255, 255, 255, 0.7);
 }
 
 .hero-text p {
   font-size: 1.5rem;
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.9);
 }
 
 .hero-text a {
   display: inline-block; /* Needed for transform to work properly */
-  background-color: rgba(50, 205, 50, 0.9);
+  background-color: #007bff;
   border-radius: 6px;
   padding: 4px;
   text-decoration: none;

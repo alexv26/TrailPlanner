@@ -1,0 +1,43 @@
+.flexwrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  height: fit-content;
+  padding: 1rem;
+}
+
+.content {
+  height: fit-content;
+  background-color: white;
+  padding: 1rem;
+  border-radius: 8px;
+  height: fit-content;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  width: 100%;
+}
+
+.text {
+  text-align: left;
+}
+
+.separator {
+  border: none;
+  height: 2px;
+  background-color: #ccc;
+  margin: 1rem 0;
+  width: 100%;
+}
+
+.userinfo h2 {
+  border-radius: 8px;
+  padding: 3px;
+  margin: 0.5rem;
+}
+
+.userinfo textarea {
+  background-color: #f0f0f0;
+  padding: 3px;
+  margin-left: 0.8rem;
+  width: 95%;
+}

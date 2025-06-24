@@ -1,0 +1,10 @@
+.profileGallery {
+  min-height: auto; /* override the 600px */
+  margin-top: 1rem; /* or adjust as needed */
+}
+
+.tripGallery {
+  color: rgb(255, 255, 255);
+  text-align: center;
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.9);
+}

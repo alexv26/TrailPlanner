@@ -8,20 +8,16 @@ const DB_NAME = "trailplanner";
 const COLLECTION_NAME = "trips";
 const PIXABAY_API_KEY = process.env.VITE_PIXABAY_API_KEY;
 
-const getPixabayImage = async (query) => {
-  try {
-    const res = await fetch(
-      `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(
-        query
-      )}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3`
-    );
-    const data = await res.json();
-    return data.hits?.[0]?.webformatURL || null;
-  } catch (err) {
-    console.error("Image fetch error:", err);
-    return null;
-  }
+const getRandomInteger = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
+
+function assignImage() {
+  const randomNum = getRandomInteger(1, 26);
+  return `${randomNum}.jpg`;
+}
 
 async function updateAllTrips() {
   const client = new MongoClient(MONGO_URI);
@@ -36,7 +32,7 @@ async function updateAllTrips() {
     for await (const trip of cursor) {
       if (!trip.tripName) continue;
 
-      const imgUrl = await getPixabayImage(`${trip.tripName} nature`);
+      const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
       if (!imgUrl) {
         console.log(`No image found for: ${trip.tripName}`);
         continue;

@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "../components/AuthProvider";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
-const showMockButton = false;
+const showMockButton = true;
 
 const emergencyContactPlaceholder =
   "e.g. \nAlexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
@@ -81,6 +82,7 @@ function CreatePlan() {
   const [page, setPage] = useState(1);
   const { state } = useLocation();
   const tripData = state?.trip || {};
+  const { user } = useAuth();
   const initialForm = {
     tripName: "",
     leaders: "",
@@ -125,22 +127,16 @@ function CreatePlan() {
 
   const [publishForm, setPublishForm] = useState(false);
 
-  const getPixabayImage = async (query) => {
-    try {
-      const res = await fetch(
-        `https://pixabay.com/api/?key=${
-          import.meta.env.VITE_PIXABAY_API_KEY
-        }&q=${encodeURIComponent(
-          query
-        )}&image_type=photo&orientation=horizontal&safesearch=true&per_page=3`
-      );
-      const data = await res.json();
-      return data.hits?.[0]?.webformatURL || null;
-    } catch (err) {
-      console.error("Image fetch error:", err);
-      return null;
-    }
+  const getRandomInteger = (min, max) => {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   };
+
+  function assignImage() {
+    const randomNum = getRandomInteger(1, 26);
+    return `${randomNum}.jpg`;
+  }
 
   async function fetchTrailheadInfo(trailName) {
     if (!trailName) {
@@ -407,26 +403,23 @@ function CreatePlan() {
     e.preventDefault();
     console.log("Final Submitted Plan:", formData);
     setPage((prev) => prev + 1);
+    const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
+    const updatedFormData = {
+      ...formData,
+      placeholderImg: imgUrl,
+    };
+
+    setFormData(updatedFormData);
 
     if (publishForm) {
-      // Wait for the image URL before setting form data
-      const imgUrl = await getPixabayImage(`${formData.tripName} nature`);
-
-      setFormData((prev) => ({
-        ...prev,
-        placeholderImg: imgUrl,
-      }));
-
       console.log("Placeholder img:", imgUrl);
 
       // Removing names and emergency contact so leaders stay anonymous
       const { emergencyContact, leaders, campsitePrice, ...anonymousFormData } =
-        {
-          ...formData,
-          placeholderImg: imgUrl,
-        };
+        updatedFormData;
 
       try {
+        // 1. Post to trips DB
         const response = await fetch("http://localhost:3004/trips", {
           method: "POST",
           headers: {
@@ -439,13 +432,38 @@ function CreatePlan() {
           throw new Error("Failed to submit trip plan");
         }
 
-        console.log("✅ Trip plan submitted successfully!");
+        console.log("✅ Trip plan submitted successfully!"); // 2. Add trip to user's personal trip list
       } catch (error) {
         console.error("❌ Error submitting trip plan:", error);
         alert(
           "There was an error submitting your trip plan. Please try again."
         );
       }
+    }
+    try {
+      // 2. Update user's personal trips
+      const userTripResponse = await fetch(
+        "http://localhost:3004/api/userTrips",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: user?.username, // make sure `user` is available in scope
+            newTrip: JSON.stringify(updatedFormData), // store as string if needed
+          }),
+        }
+      );
+
+      if (!userTripResponse.ok) {
+        throw new Error("Failed to save trip to user profile");
+      }
+
+      console.log("✅ Trip also saved to user profile!");
+    } catch (error) {
+      console.error("❌ Error submitting trip plan:", error);
+      alert("There was an error submitting your trip plan. Please try again.");
     }
   };
 
@@ -821,7 +839,7 @@ function CreatePlan() {
               style={{
                 marginTop: "-10px",
                 marginBottom: "5px",
-                color: "yellow",
+                color: "red",
                 fontSize: "14px",
                 fontWeight: "bold",
               }}
@@ -965,7 +983,7 @@ function CreatePlan() {
               style={{
                 marginTop: "-10px",
                 marginBottom: "5px",
-                color: "yellow",
+                color: "red",
                 fontSize: "14px",
                 fontWeight: "bold",
               }}
@@ -1034,7 +1052,7 @@ function CreatePlan() {
             </label>
             <p
               style={{
-                color: "yellow",
+                color: "blue",
                 fontWeight: "bold",
                 marginTop: "-10px",
               }}

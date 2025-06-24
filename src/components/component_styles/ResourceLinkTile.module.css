@@ -1,6 +1,6 @@
 a {
   text-decoration: none;
-  color: white;
+  color: black;
 }
 
 .container {
@@ -10,12 +10,17 @@ a {
 }
 .tile {
   display: flex;
-  background-color: #2d2d30;
+  background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
   padding: 12px;
   width: 80%;
   flex-direction: row;
   align-items: flex-start; /* Align items to the top */
+  transition: 0.2s ease;
+}
+
+.tile:hover {
+  transform: scale(1.003);
 }
 
 .text {
