@@ -1,7 +1,13 @@
 // TripTile.jsx
 import styles from "./component_styles/TripGallery.module.css";
 
-export default function TripTile({ trip, onClick, deleteMode = false }) {
+export default function TripTile({
+  trip,
+  onClick,
+  deleteMode = false,
+  confirming = false,
+  onCancelConfirm,
+}) {
   const calculateTripLength = (start, end) => {
     const startDate = new Date(start);
     const endDate = new Date(end);
@@ -11,7 +17,10 @@ export default function TripTile({ trip, onClick, deleteMode = false }) {
   };
 
   return (
-    <div className={styles.tripTile} onClick={onClick}>
+    <div
+      className={styles.tripTile}
+      onClick={!confirming ? onClick : undefined}
+    >
       {trip.placeholderImg ? (
         <div className={styles.imageWrapper}>
           <img
@@ -19,13 +28,32 @@ export default function TripTile({ trip, onClick, deleteMode = false }) {
             alt={trip.tripName}
             className={styles.tileImage}
           />
-          {deleteMode && <div className={styles.overlay}>×</div>}
+          {deleteMode && <div className={styles.overlay}>x</div>}
         </div>
       ) : (
         <div className={styles.imagePlaceholder}>No image available</div>
       )}
-      <h3>{trip.tripName}</h3>
-      <p>{calculateTripLength(trip.startDate, trip.endDate)}</p>
+      {confirming && deleteMode ? (
+        <>
+          <h3>Are you sure you want to delete this trip?</h3>
+          <div className={styles.deleteConfirmButtons}>
+            <button
+              onClick={onCancelConfirm}
+              style={{ backgroundColor: "grey" }}
+            >
+              No
+            </button>
+            <button onClick={onClick} style={{ backgroundColor: "red" }}>
+              Yes
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <h3>{trip.tripName}</h3>
+          <p>{calculateTripLength(trip.startDate, trip.endDate)}</p>
+        </>
+      )}
     </div>
   );
 }

@@ -17,10 +17,10 @@
   display: inline-block; /* Needed for transform to work properly */
   color: rgb(255, 255, 255);
   text-decoration: underline;
-  background-color: #007bff;
   padding: 0.4rem;
   border-radius: 4px;
   transition: transform 0.2s ease-in-out;
+  cursor: pointer;
 }
 
 .tripGallery a:hover {

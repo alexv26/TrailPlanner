@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "../components/AuthProvider";
+import objectId from "bson-objectid";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
@@ -248,8 +249,6 @@ function CreatePlan() {
       const [lat, lng] = coords.split(",");
 
       // Now lat and lng are separate variables
-      console.log("Latitude:", lat);
-      console.log("Longitude:", lng);
 
       const response = await fetch(
         `http://localhost:${
@@ -267,11 +266,8 @@ function CreatePlan() {
         return;
       }
       if (data) {
-        console.log("Nearest Hospital Data:", data);
-        console.log("Data obj 1:", data[0]);
         // Sort data in accordance to distance:
         const sortedData = sortHospitals(data, lat, lng);
-        console.log("Sorted hospitals:", sortedData);
         // return top 5 hospitals
 
         const topFiveHospitalsText = sortedData
@@ -403,12 +399,19 @@ function CreatePlan() {
     e.preventDefault();
     setPage((prev) => prev + 1);
     const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
+
+    // removing id so there are no duplicates in DB
+    const { _id, ...rest } = formData;
+
+    const generatedId = objectId();
+
     const updatedFormData = {
-      ...formData,
+      ...rest,
       placeholderImg: imgUrl,
+      _id: generatedId.toString(),
     };
 
-    setFormData(updatedFormData);
+    //setFormData(updatedFormData);
 
     if (publishForm) {
       console.log("Placeholder img:", imgUrl);
@@ -450,7 +453,7 @@ function CreatePlan() {
           },
           body: JSON.stringify({
             username: user?.username, // make sure `user` is available in scope
-            newTrip: JSON.stringify(updatedFormData), // store as string if needed
+            newTrip: updatedFormData, // store as string if needed
           }),
         }
       );
@@ -465,8 +468,6 @@ function CreatePlan() {
       alert("There was an error submitting your trip plan. Please try again.");
     }
   };
-
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const name = formData.trailhead;

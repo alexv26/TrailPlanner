@@ -12,11 +12,12 @@ export default function ViewProfile() {
   const [loading, setLoading] = useState(true);
   const [deletingTrips, setDeletingTrips] = useState(false);
   const handleNavigate = (index, trip) => () => navigate(`/trip/${index}`);
-  const handleDelete = (index, trip) => () => {
-    // You can replace this with actual delete logic
-    console.log("Deleting trip:", trip);
-    navigate(`/`);
-  };
+  // update UI to match db after delete
+  function handleTripDeleted(deletedTripId) {
+    setTrips((prevTrips) =>
+      prevTrips.filter((trip) => trip._id !== deletedTripId)
+    );
+  }
 
   function handleEditTripsButton() {
     setDeletingTrips(!deletingTrips);
@@ -45,22 +46,21 @@ export default function ViewProfile() {
       ) : trips.length > 0 ? (
         <div className={styles.tripGallery}>
           <h1>MY TRIPS</h1>
-          <a onClick={handleEditTripsButton}>Edit trips</a>
+          <a
+            onClick={handleEditTripsButton}
+            style={{
+              backgroundColor: deletingTrips ? "red" : "rgba(99, 99, 99, 0.8)",
+            }}
+          >
+            Edit trips
+          </a>
           <TripGallery
-            trips={trips
-              .map((t) => {
-                try {
-                  return JSON.parse(t);
-                } catch (err) {
-                  console.error("Failed to parse trip:", err, t);
-                  return null;
-                }
-              })
-              .filter(Boolean)}
-            pageSize={8}
+            trips={trips}
+            pageSize={4}
             className={styles.profileGallery}
             deleteMode={deletingTrips}
             originatingLocation={"/profile"}
+            onTripDeleted={handleTripDeleted}
           />
         </div>
       ) : (

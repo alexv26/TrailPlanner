@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TripTile from "./TripTile";
 import styles from "./component_styles/TripGallery.module.css";
+import { useAuth } from "./AuthProvider";
 
 export default function TripGallery({
   trips,
@@ -9,18 +10,49 @@ export default function TripGallery({
   className = "",
   deleteMode = false,
   originatingLocation = "/explore",
+  onTripDeleted,
 }) {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const totalPages = Math.ceil(trips.length / pageSize);
   const currentTrips = trips.slice((page - 1) * pageSize, page * pageSize);
 
-  // Default click behavior: navigate to trip detail
+  const [confirmingTripId, setConfirmingTripId] = useState(null);
+
   const handleClick = deleteMode
-    ? (index, trip) => () => console.log("Deleting trip", trip)
+    ? (index, trip) => () => {
+        if (confirmingTripId === trip._id) {
+          deleteTrip(trip);
+        } else {
+          setConfirmingTripId(trip._id);
+        }
+      }
     : (index, trip) => () =>
         navigate(`/trip`, { state: { trip, from: originatingLocation } });
+
+  async function deleteTrip(trip) {
+    console.log("deleting trip with trip id:", trip._id);
+    // Delete from user DB
+    await fetch("http://localhost:3004/api/userTrips", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: user.username, tripId: trip._id }),
+    });
+
+    // delete from trips DB
+    await fetch(`http://localhost:3004/trips/${trip._id}`, {
+      method: "DELETE",
+    });
+
+    setConfirmingTripId(null); // Reset after deletion
+
+    // update UI to match db after delete
+    if (onTripDeleted) {
+      onTripDeleted(trip._id);
+    }
+  }
 
   const renderPageButtons = () => {
     const pages = [];
@@ -64,9 +96,11 @@ export default function TripGallery({
           const globalIndex = (page - 1) * pageSize + index;
           return (
             <TripTile
-              key={trip.id || index}
+              key={trip._id || index}
               trip={trip}
               deleteMode={deleteMode}
+              confirming={confirmingTripId === trip._id}
+              onCancelConfirm={() => setConfirmingTripId(null)}
               onClick={handleClick(globalIndex, trip)}
             />
           );

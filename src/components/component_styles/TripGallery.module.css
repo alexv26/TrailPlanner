@@ -100,3 +100,7 @@
   font-weight: bold;
   pointer-events: none; /* allows clicks to pass through */
 }
+
+.deleteConfirmButtons {
+  margin-top: -10px;
+}
