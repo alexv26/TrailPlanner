@@ -34,11 +34,12 @@ export default function TripGallery({
 
   async function deleteTrip(trip) {
     console.log("deleting trip with trip id:", trip._id);
+
     // Delete from user DB
     await fetch("http://localhost:3004/api/userTrips", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: user.username, tripId: trip._id }),
+      body: JSON.stringify({ username: trip.createdBy, tripId: trip._id }),
     });
 
     // delete from trips DB

@@ -50,6 +50,8 @@ const mockFormData = {
     "Notify OA advisor by 6:30 PM if group hasn't returned; follow delayed return protocol.",
   altRoute:
     "https://www.alltrails.com/trail/us/new-hampshire/lonesome-lake-trail\nShorter and safer in poor weather.",
+  trailheadAddress: "mtn rd",
+  nearestHospital: "here",
 };
 
 function convertDate(releaseDate) {
@@ -85,6 +87,7 @@ function CreatePlan() {
   const tripData = state?.trip || {};
   const { user } = useAuth();
   const initialForm = {
+    createdBy: "",
     tripName: "",
     leaders: "",
     startDate: "",
@@ -121,9 +124,12 @@ function CreatePlan() {
   };
 
   // Merge trip data into the initial form
-  const [formData, setFormData] = useState({
-    ...initialForm,
-    ...tripData, // overwrites defaults with any matching fields from tripData
+
+  const [formData, setFormData] = useState(() => {
+    return {
+      ...initialForm,
+      ...tripData,
+    };
   });
 
   const [publishForm, setPublishForm] = useState(false);
@@ -408,6 +414,7 @@ function CreatePlan() {
     const updatedFormData = {
       ...rest,
       placeholderImg: imgUrl,
+      createdBy: user?.username,
       _id: generatedId.toString(),
     };
 
@@ -442,6 +449,7 @@ function CreatePlan() {
         );
       }
     }
+
     try {
       // 2. Update user's personal trips
       const userTripResponse = await fetch(

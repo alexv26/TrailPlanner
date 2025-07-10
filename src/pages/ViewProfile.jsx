@@ -11,7 +11,6 @@ export default function ViewProfile() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingTrips, setDeletingTrips] = useState(false);
-  const handleNavigate = (index, trip) => () => navigate(`/trip/${index}`);
   // update UI to match db after delete
   function handleTripDeleted(deletedTripId) {
     setTrips((prevTrips) =>

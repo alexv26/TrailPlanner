@@ -25,14 +25,13 @@ function NavigationBar() {
       <div className={styles["container"]}>
         <div className={styles["left-content"]}>
           <h3>TrailPlanner</h3>
-        </div>
-        <div className={styles["center-content"]}>
           <Link to="/">Home</Link>
           <Link to="/about">About</Link>
           <Link to="/plan">Make a Plan</Link>
           <Link to="/explore">Trip Gallery</Link>
           <Link to="/resources">Resources</Link>
         </div>
+        <div className={styles["center-content"]}></div>
         <div className={styles["right-content"]}>
           {isLoggedIn ? (
             <div className={styles["dropdown-wrapper"]}>
@@ -46,13 +45,16 @@ function NavigationBar() {
               {dropdownOpen && (
                 <div className={styles["dropdown-menu"]}>
                   <Link to="/profile">View Profile</Link>
+                  {user && user.role === "Admin" && (
+                    <Link to="/admin">Admin Homepage</Link>
+                  )}
                   <button onClick={handleLogout}>Logout</button>
                 </div>
               )}
             </div>
           ) : (
             <div className={styles.loginButton}>
-              <Link to="/login">Login</Link>
+              <Link to="/login">Login/Signup</Link>
             </div>
           )}
         </div>

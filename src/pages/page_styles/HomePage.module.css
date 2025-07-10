@@ -10,9 +10,10 @@
 
 .hero-text h1 {
   font-size: 6rem;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   margin-bottom: 0.5rem;
   color: limegreen;
-  text-shadow: 2px 2px 12px rgba(255, 255, 255, 0.7);
+  text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.7);
 }
 
 .hero-text p {
@@ -22,7 +23,7 @@
 
 .hero-text a {
   display: inline-block; /* Needed for transform to work properly */
-  background-color: #007bff;
+
   border-radius: 6px;
   padding: 4px;
   text-decoration: none;
@@ -31,6 +32,10 @@
   transition: transform 0.2s ease-in-out;
 }
 
-#create-plan-button:hover {
+.create-plan-button {
+  background-color: limegreen;
+}
+
+.create-plan-button:hover {
   transform: scale(1.06); /* Grows the element by 5% */
 }

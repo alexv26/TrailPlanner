@@ -14,7 +14,7 @@ export default function LoginSignup() {
     username: "",
     password: "",
     email: "",
-    role: "",
+    role: "User",
     lastLogin: "",
     dateCreated: "",
     userImg: "",

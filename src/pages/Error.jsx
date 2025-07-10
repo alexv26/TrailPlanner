@@ -1,7 +1,12 @@
 import styles from "./page_styles/Error.module.css";
+
+import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
-export default function Error({ errorNum }) {
+export default function Error({ errorCode }) {
+  const location = useLocation();
+  const errorNum = location.state?.errorNum || errorCode;
+
   const errorNames = {
     400: "Bad Request",
     401: "Unauthorized",

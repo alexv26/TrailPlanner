@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useAuth } from "./components/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import CreatePlan from "./pages/CreatePlan.jsx";
@@ -11,14 +12,17 @@ import TripDetails from "./pages/TripDetails.jsx";
 import LoginSignup from "./pages/LoginSignup.jsx";
 import ViewProfile from "./pages/ViewProfile.jsx";
 import Error from "./pages/Error.jsx";
+import Admin from "./pages/Admin.jsx";
 import "./App.css";
 
 function App() {
+  const user = useAuth();
   return (
     <Router>
       <div className="background-image" />
-      <NavigationBar />
+
       <div className="main-content">
+        <NavigationBar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<About />} />
@@ -35,6 +39,16 @@ function App() {
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
           <Route path="/trip" element={<TripDetails />}></Route>
           <Route path="/login" element={<LoginSignup />}></Route>
+          <Route path="/error" element={<Error />}></Route>
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute requiredRole="Admin">
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
 
           <Route
             path="/profile"
@@ -44,7 +58,7 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Error errorNum={404} />} />
+          <Route path="*" element={<Error errorCode={404} />} />
         </Routes>
       </div>
     </Router>

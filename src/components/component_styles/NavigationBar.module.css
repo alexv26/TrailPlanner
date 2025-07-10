@@ -1,6 +1,5 @@
 .container {
   font-size: 30px;
-  font-family: "Inter", sans-serif;
   background-color: #2d2d30;
   width: 100%;
   height: 60px; /* Define navbar height */
@@ -36,7 +35,13 @@
 }
 
 .left-content {
-  flex: 0 0 auto;
+  display: flex;
+  flex: auto;
+  align-items: center;
+  gap: 0;
+}
+
+.left-content h3 {
   color: limegreen;
 }
 
@@ -113,5 +118,6 @@
   background-color: #007bff;
   border-radius: 8px;
   margin-bottom: 2px;
+  margin-right: 5px;
   padding-bottom: 5px;
 }
