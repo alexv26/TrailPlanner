@@ -17,7 +17,11 @@
   width: 250px;
   cursor: pointer;
   transition: 0.2s ease;
-  height: 270px;
+  height: auto;
+}
+
+.tripTile strong {
+  color: rgb(57, 57, 57);
 }
 
 .tripTile:hover {

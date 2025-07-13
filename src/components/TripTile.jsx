@@ -51,7 +51,16 @@ export default function TripTile({
       ) : (
         <>
           <h3>{trip.tripName}</h3>
-          <p>{calculateTripLength(trip.startDate, trip.endDate)}</p>
+          <p>
+            <strong>Location:</strong> {trip.location}
+          </p>
+          <p>
+            <strong>Difficulty:</strong> {trip.difficulty}
+          </p>
+          <p>
+            <strong>Tip Length: </strong>
+            {calculateTripLength(trip.startDate, trip.endDate)}
+          </p>
         </>
       )}
     </div>

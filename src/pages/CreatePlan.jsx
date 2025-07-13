@@ -8,7 +8,7 @@ import styles from "./page_styles/CreatePlan.module.css";
 const showMockButton = true;
 
 const emergencyContactPlaceholder =
-  "e.g. \nAlexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
+  "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
 const mealPlanPlaceholder =
   "e.g.\nLunch:\n1.5lb Turkey\n1lb american cheese\nPringles\n\nDinner:\nPasta\nRed Sauce\nPesto";
 
@@ -683,7 +683,17 @@ function CreatePlan() {
                 name="tripName"
                 value={formData.tripName}
                 onChange={handleChange}
-                placeholder="e.g. Day Trip to Mt. Lafayette"
+                placeholder="Day Trip to Mt. Lafayette"
+                required
+              />
+            </label>
+            <label>
+              General Trip Location:
+              <input
+                name="tripName"
+                value={formData.location}
+                onChange={handleChange}
+                placeholder="Franconia, NH"
                 required
               />
             </label>
@@ -693,7 +703,7 @@ function CreatePlan() {
                 name="leaders"
                 value={formData.leaders}
                 onChange={handleChange}
-                placeholder="e.g. Alex Velsmid and Thomas Gregory"
+                placeholder="Alex Velsmid and Thomas Gregory"
                 required
               />
             </label>
@@ -732,7 +742,7 @@ function CreatePlan() {
                 name="groupSize"
                 value={formData.groupSize}
                 onChange={handleChange}
-                placeholder="Group size here"
+                placeholder="7"
                 required
               />
             </label>
@@ -819,7 +829,7 @@ function CreatePlan() {
               <input
                 name="allTrailsLink"
                 value={formData.allTrailsLink}
-                placeholder="e.g. https://www.alltrails.com/trail/us/new-hampshire/mount-lafayette"
+                placeholder="https://www.alltrails.com/trail/us/new-hampshire/mount-lafayette"
                 onChange={handleChange}
               />
             </label>
@@ -828,7 +838,7 @@ function CreatePlan() {
               <input
                 name="trailhead"
                 value={formData.trailhead}
-                placeholder="Insert trailhead name here."
+                placeholder="Falling Waters Trailhead"
                 onChange={handleChange}
                 required
               />
@@ -838,7 +848,7 @@ function CreatePlan() {
               <textarea
                 name="trailheadAddress"
                 value={formData.trailheadAddress}
-                placeholder="Insert trailhead address here."
+                placeholder="123 Trailhead Rd, Franconia, NH"
                 onChange={handleChange}
                 required
               />
@@ -861,7 +871,7 @@ function CreatePlan() {
               <input
                 name="distanceGain"
                 value={formData.distanceGain}
-                placeholder="Insert total trail distance here."
+                placeholder="7.5 mi"
                 onChange={handleChange}
               />
             </label>
@@ -870,7 +880,7 @@ function CreatePlan() {
               <input
                 name="elevationGain"
                 value={formData.elevationGain}
-                placeholder="Insert total trail elevation gain here."
+                placeholder="3500 ft"
                 onChange={handleChange}
               />
             </label>
@@ -880,7 +890,7 @@ function CreatePlan() {
                 name="activityTime"
                 value={formData.activityTime}
                 onChange={handleChange}
-                placeholder="Insert total activity time here."
+                placeholder="7 hrs."
                 required
               />
             </label>
@@ -911,7 +921,7 @@ function CreatePlan() {
                 name="departure"
                 value={formData.departure}
                 onChange={handleChange}
-                placeholder="e.g. 7am from the OA office"
+                placeholder="7am from the OA office"
                 required
               />
             </label>
@@ -921,7 +931,7 @@ function CreatePlan() {
                 name="returnTime"
                 value={formData.returnTime}
                 onChange={handleChange}
-                placeholder="e.g. 5pm"
+                placeholder="5pm"
                 required
               />
             </label>
@@ -931,7 +941,7 @@ function CreatePlan() {
                 name="mealBreaks"
                 value={formData.mealBreaks}
                 onChange={handleChange}
-                placeholder="e.g. Lunch at the summit, around 12pm"
+                placeholder="Lunch at the summit, around 12pm"
                 required
               />
             </label>
@@ -941,7 +951,7 @@ function CreatePlan() {
                 name="backupExit"
                 value={formData.backupExit}
                 onChange={handleChange}
-                placeholder="e.g. Exit off the falling water trail before the ridge, ~1.5 miles from trialhead"
+                placeholder="Exit off the falling water trail before the ridge, ~1.5 miles from trialhead"
                 required
               />
             </label>
@@ -983,7 +993,7 @@ function CreatePlan() {
                 name="nearestHospital"
                 value={formData.nearestHospital}
                 onChange={handleChange}
-                placeholder="Please enter the addresses of the nearest hospitals here."
+                placeholder={`1. Nearest Hospital 1 addr \n2. Nearest Hospital 2 addr \n3. Nearest Hospital 3 addr`}
                 required
               />
             </label>
