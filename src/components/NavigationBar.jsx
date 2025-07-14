@@ -22,8 +22,8 @@ function NavigationBar() {
 
   return (
     <>
-      <div className={styles["container"]}>
-        <div className={styles["left-content"]}>
+      <div className={styles.container}>
+        <div className={styles.leftContent}>
           <h3>TrailPlanner</h3>
           <Link to="/">Home</Link>
           <Link to="/about">About</Link>
@@ -31,19 +31,19 @@ function NavigationBar() {
           <Link to="/explore">Trip Gallery</Link>
           <Link to="/resources">Resources</Link>
         </div>
-        <div className={styles["center-content"]}></div>
-        <div className={styles["right-content"]}>
+        <div className={styles.centerContent}></div>
+        <div className={styles.rightContent}>
           {isLoggedIn ? (
-            <div className={styles["dropdown-wrapper"]}>
+            <div className={styles.dropdownWrapper}>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className={styles["profile-icon-button"]}
+                className={styles.profileIconButton}
               >
                 <p>{user?.username}</p>
                 <UserCircle size={28} />
               </button>
               {dropdownOpen && (
-                <div className={styles["dropdown-menu"]}>
+                <div className={styles.dropdownMenu}>
                   <Link to="/profile">View Profile</Link>
                   {user && user.role === "Admin" && (
                     <Link to="/admin">Admin Homepage</Link>

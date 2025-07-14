@@ -72,9 +72,6 @@ export default function LoginSignup() {
 
       if (!response.ok) throw new Error(data.message || "Request failed");
 
-      // Save token
-      localStorage.setItem("token", data.token);
-
       // ✅ Update auth context
       login({ ...data.userData, token: data.token });
 

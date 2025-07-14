@@ -667,7 +667,7 @@ function CreatePlan() {
   }
 
   return (
-    <div className={styles["form-container"]}>
+    <div className={styles.formContainer}>
       <form onSubmit={page === finalPage - 1 ? handleSubmit : handleNext}>
         {page === 1 && (
           <>
@@ -690,7 +690,7 @@ function CreatePlan() {
             <label>
               General Trip Location:
               <input
-                name="tripName"
+                name="location"
                 value={formData.location}
                 onChange={handleChange}
                 placeholder="Franconia, NH"
@@ -1106,7 +1106,7 @@ function CreatePlan() {
           </>
         )}
 
-        <div className={styles["form-navigation"]}>
+        <div className={styles.formNavigation}>
           {page > 1 && page < finalPage + 1 && (
             <button type="button" onClick={handleBack}>
               Back

@@ -5,6 +5,8 @@ import { useAuth } from "../components/AuthProvider";
 import ProfileTile from "../components/ProfileTile.jsx";
 import TripGallery from "../components/TripGallery.jsx";
 
+import editButton from "../assets/edit-button.png";
+
 export default function ViewProfile() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -44,15 +46,17 @@ export default function ViewProfile() {
         <p>Loading your trips...</p>
       ) : trips.length > 0 ? (
         <div className={styles.tripGallery}>
-          <h1>MY TRIPS</h1>
-          <a
-            onClick={handleEditTripsButton}
-            style={{
-              backgroundColor: deletingTrips ? "red" : "rgba(99, 99, 99, 0.8)",
-            }}
-          >
-            Edit trips
-          </a>
+          <div className={styles.header}>
+            <h1>MY TRIPS</h1>
+            <a
+              onClick={handleEditTripsButton}
+              className={`${styles.editButton} ${
+                deletingTrips ? styles.deleteMode : ""
+              }`}
+            >
+              Edit
+            </a>
+          </div>
           <TripGallery
             trips={trips}
             pageSize={4}

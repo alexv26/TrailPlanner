@@ -14,6 +14,7 @@ export default function TripGallery({
 }) {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
 
   const totalPages = Math.ceil(trips.length / pageSize);
@@ -92,6 +93,7 @@ export default function TripGallery({
 
   return (
     <div>
+      <div className={styles.searchBar}></div>
       <div className={`${styles.tileGrid} ${className}`}>
         {currentTrips.map((trip, index) => {
           const globalIndex = (page - 1) * pageSize + index;

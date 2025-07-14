@@ -26,3 +26,27 @@
 .tripGallery a:hover {
   transform: scale(1.05);
 }
+
+/* HEADER (text and edit button) */
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.header .editButton {
+  border-radius: 6px;
+  color: white;
+  background-color: rgba(99, 99, 99, 0.8);
+  cursor: pointer;
+  text-decoration: none;
+  height: fit-content;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.header .deleteMode {
+  background-color: red;
+}

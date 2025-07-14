@@ -25,6 +25,15 @@
   margin-bottom: 10px;
 }
 
+.inputField input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: #ddd;
+  border-radius: 8px;
+  margin-top: 5px;
+}
+
 .buttons {
   display: flex;
   justify-content: center;
@@ -36,6 +45,11 @@
   font-weight: bold;
   font-size: 18px;
   width: fit-content;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
 }
 
 .switchMode {
@@ -58,6 +72,7 @@
 
 .warning {
   margin-top: 10px;
+  margin-bottom: 5px;
   border-radius: 12px;
   background-color: red;
   width: 100%; /* Make it full width of container */

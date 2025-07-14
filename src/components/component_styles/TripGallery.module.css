@@ -38,6 +38,18 @@
   flex-wrap: wrap;
 }
 
+.pagination button {
+  background-color: grey;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+}
+
+.pagination button:hover {
+  background-color: #007bff;
+}
+
 .pageButton {
   padding: 0.4rem 0.8rem;
   background-color: #e0e0e0;
@@ -107,4 +119,18 @@
 
 .deleteConfirmButtons {
   margin-top: -10px;
+}
+
+.searchBar {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.searchBar input {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }

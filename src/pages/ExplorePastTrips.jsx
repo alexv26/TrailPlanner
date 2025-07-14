@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthProvider.jsx";
 import styles from "./page_styles/ExplorePastTrips.module.css";
-// ExplorePastTrips.jsx
 import TripGallery from "../components/TripGallery.jsx";
 
 export default function ExplorePastTrips() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deletingTrips, setDeletingTrips] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
 
-  // update UI to match db after delete
   function handleTripDeleted(deletedTripId) {
     setTrips((prevTrips) =>
       prevTrips.filter((trip) => trip._id !== deletedTripId)
@@ -33,6 +32,10 @@ export default function ExplorePastTrips() {
         setLoading(false);
       });
   }, []);
+
+  const filteredTrips = trips.filter((trip) =>
+    trip?.location?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   if (loading) {
     return (
@@ -62,9 +65,19 @@ export default function ExplorePastTrips() {
           )}
         </div>
       </div>
+
+      <div className={styles.searchBar}>
+        <input
+          type="text"
+          placeholder="Search by location..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       <div className={styles.tileGrid}>
         <TripGallery
-          trips={trips}
+          trips={filteredTrips}
           pageSize={8}
           deleteMode={deletingTrips}
           originatingLocation={"/explore"}

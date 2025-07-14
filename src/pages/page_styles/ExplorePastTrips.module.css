@@ -59,6 +59,10 @@
 .flexContainer .adminEditButton {
   display: flex;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE/Edge */
   margin-top: 0;
 }
 
@@ -70,4 +74,26 @@
 
 .flexContainer .adminEditButton a:hover {
   cursor: pointer;
+}
+
+/* Search Bar */
+.searchBar {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+  margin-bottom: 0;
+}
+
+.searchBar input {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.searchBar input:focus {
+  border-color: #007bff;
 }
