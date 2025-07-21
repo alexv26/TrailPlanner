@@ -16,12 +16,12 @@ export default function ProfileTile() {
             <hr className={styles.separator} />
 
             <div className={styles.userinfo}>
-              <h2>Username: {user?.username}</h2>
-              <h2>Email: {user?.email}</h2>
-              <h2>User Affiliation (Permission): {user?.role}</h2>
+              <p>Username: {user?.username}</p>
+              <p>Email: {user?.email}</p>
+              <p>User Affiliation (Permission): {user?.role}</p>
               {showBio && (
                 <>
-                  <h2>Bio:</h2>
+                  <p>Bio:</p>
                   <textarea rows="5" readOnly value={user?.userBio} />
                 </>
               )}

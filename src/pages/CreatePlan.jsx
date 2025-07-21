@@ -82,7 +82,18 @@ function convertDate(releaseDate) {
 
 function CreatePlan() {
   const finalPage = 7;
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(() => {
+    const stored = localStorage.getItem("page");
+    if (stored) {
+      try {
+        return parseInt(stored, 10);
+      } catch (e) {
+        console.error("Failed to parse stored formData:", e);
+      }
+    }
+    return 1;
+  });
+
   const { state } = useLocation();
   const tripData = state?.trip || {};
   const { user } = useAuth();
@@ -126,11 +137,33 @@ function CreatePlan() {
   // Merge trip data into the initial form
 
   const [formData, setFormData] = useState(() => {
+    const stored = localStorage.getItem("formData");
+    if (stored) {
+      try {
+        return JSON.parse(stored);
+      } catch (e) {
+        console.error("Failed to parse stored formData:", e);
+      }
+    }
     return {
       ...initialForm,
       ...tripData,
     };
   });
+
+  // save formData on when formData changes
+  useEffect(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [formData]);
+
+  // save page num in localStorage
+  useEffect(() => {
+    localStorage.setItem("page", JSON.stringify(page));
+  }, [page]);
+
+  const location = useLocation();
+  // reset formData and pagewhen changing out of "create plan" page
+  const prevPathRef = useRef(location.pathname);
 
   const [publishForm, setPublishForm] = useState(false);
 

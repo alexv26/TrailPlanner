@@ -5,9 +5,10 @@
   margin: 80px auto;
   padding: 30px;
   background-color: #ffffff;
+  box-shadow: var(--shadow-elevated);
   color: #111;
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 

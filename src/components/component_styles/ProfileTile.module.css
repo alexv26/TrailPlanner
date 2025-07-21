@@ -29,9 +29,10 @@
   width: 100%;
 }
 
-.userinfo h2 {
+.userinfo p {
   border-radius: 8px;
   padding: 3px;
+  font-size: 1.3rem;
   margin: 0.5rem;
 }
 

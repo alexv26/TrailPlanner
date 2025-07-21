@@ -8,7 +8,13 @@ export default function ExplorePastTrips() {
   const [loading, setLoading] = useState(true);
   const [deletingTrips, setDeletingTrips] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tilesPerPage, setTilesPerPage] = useState(10);
+  const [searchBarVisible, setSearchBarVisible] = useState(true);
   const { user } = useAuth();
+
+  function handlePageChange(page) {
+    setSearchBarVisible(page === 1);
+  }
 
   function handleTripDeleted(deletedTripId) {
     setTrips((prevTrips) =>
@@ -33,6 +39,25 @@ export default function ExplorePastTrips() {
       });
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) {
+        setTilesPerPage(10);
+      } else {
+        setTilesPerPage(4);
+      }
+    };
+
+    // Set initial value
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const filteredTrips = trips.filter((trip) =>
     trip?.location?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -47,43 +72,46 @@ export default function ExplorePastTrips() {
 
   return (
     <>
-      <div className={styles.flexContainer}>
-        <div className={styles.bodyText}>
-          <h1>Trip Gallery</h1>
+      {searchBarVisible && (
+        <div className={styles.searchBar}>
+          <h1>Search Trips</h1>
+          <div className={styles.searchInputWrapper}>
+            <input
+              type="text"
+              placeholder="Search by location..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <span className={styles.searchIcon}>🔍</span>
+          </div>
+          <hr />
         </div>
-        <div className={styles.adminEditButton}>
-          {user && user.role === "Admin" && (
-            <a
-              onClick={handleEditTripsButton}
-              style={{
-                backgroundColor: deletingTrips ? "red" : "rgb(99, 99, 99)",
-                marginBottom: "20px",
-              }}
-            >
-              Edit trips (Admin)
-            </a>
-          )}
-        </div>
-      </div>
-
-      <div className={styles.searchBar}>
-        <input
-          type="text"
-          placeholder="Search by location..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </div>
+      )}
 
       <div className={styles.tileGrid}>
         <TripGallery
           trips={filteredTrips}
-          pageSize={8}
+          pageSize={tilesPerPage}
           deleteMode={deletingTrips}
           originatingLocation={"/explore"}
           onTripDeleted={handleTripDeleted}
+          onPageChange={handlePageChange}
         />
       </div>
+
+      {user && user.role === "Admin" && (
+        <div className={styles.adminEditButton}>
+          <a
+            onClick={handleEditTripsButton}
+            style={{
+              backgroundColor: deletingTrips ? "red" : "rgb(99, 99, 99)",
+              marginBottom: "20px",
+            }}
+          >
+            Edit trips (Admin)
+          </a>
+        </div>
+      )}
     </>
   );
 }

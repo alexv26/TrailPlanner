@@ -1,5 +1,11 @@
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  HashRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { useAuth } from "./components/AuthProvider";
+import { useEffect } from "react";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import CreatePlan from "./pages/CreatePlan.jsx";
@@ -15,12 +21,27 @@ import Error from "./pages/Error.jsx";
 import Admin from "./pages/Admin.jsx";
 import "./App.css";
 
+function RouteWatcher() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const isOnPlan = location.pathname.includes("plan");
+    if (!isOnPlan) {
+      localStorage.removeItem("formData");
+      localStorage.removeItem("page");
+    }
+  }, [location.pathname]);
+
+  return null; // This component doesn't render anything
+}
+
 function App() {
   const user = useAuth();
+
   return (
     <Router>
+      <RouteWatcher />
       <div className="background-image" />
-
       <div className="main-content">
         <NavigationBar />
         <Routes>

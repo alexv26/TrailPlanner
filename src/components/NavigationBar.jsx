@@ -9,40 +9,79 @@ function NavigationBar() {
   const { user, logout } = useAuth();
   const isLoggedIn = !!user;
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [linksDropdownOpen, setLinksDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout(); // this removes token and sets user to null
   };
 
   useEffect(() => {
-    setDropdownOpen(false);
+    setProfileDropdownOpen(false);
+    setLinksDropdownOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (profileDropdownOpen) {
+      setLinksDropdownOpen(false);
+    }
+  }, [profileDropdownOpen]);
+  useEffect(() => {
+    if (linksDropdownOpen) {
+      setProfileDropdownOpen(false);
+    }
+  }, [linksDropdownOpen]);
 
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.leftContent}>
+        <div className={styles.logo}>
           <h3>TrailPlanner</h3>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-          <Link to="/plan">Make a Plan</Link>
-          <Link to="/explore">Trip Gallery</Link>
-          <Link to="/resources">Resources</Link>
         </div>
-        <div className={styles.centerContent}></div>
+        <div className={styles.linksWrapper}>
+          <button
+            className={styles.linksDropdownButton}
+            onClick={() => setLinksDropdownOpen(!linksDropdownOpen)}
+          >
+            ☰
+          </button>
+          <div
+            className={`${styles.links} ${
+              linksDropdownOpen ? styles.linksDropdownOpen : ""
+            }`}
+          >
+            <ul>
+              <li>
+                <Link to="/">Home</Link>
+              </li>
+              <li>
+                <Link to="/about">About</Link>
+              </li>
+              <li>
+                <Link to="/plan">Make a Plan</Link>
+              </li>
+              <li>
+                <Link to="/explore">Trip Gallery</Link>
+              </li>
+              <li>
+                <Link to="/resources">Resources</Link>
+              </li>
+            </ul>
+          </div>
+        </div>
         <div className={styles.rightContent}>
           {isLoggedIn ? (
             <div className={styles.dropdownWrapper}>
               <button
-                onClick={() => setDropdownOpen((prev) => !prev)}
+                onClick={() => setProfileDropdownOpen((prev) => !prev)}
                 className={styles.profileIconButton}
               >
                 <p>{user?.username}</p>
                 <UserCircle size={28} />
               </button>
-              {dropdownOpen && (
+              {profileDropdownOpen && (
                 <div className={styles.dropdownMenu}>
                   <Link to="/profile">View Profile</Link>
                   {user && user.role === "Admin" && (

@@ -1,41 +1,52 @@
-/* Text overlay container */
-.hero-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  color: white;
+.container {
+  display: flex;
+  width: 100%;
 }
 
+.hero {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 80vh;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Text overlay container */
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+/* Responsive H1 using clamp(min, preferred, max) */
 .hero-text h1 {
-  font-size: 6rem;
-  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+  font-size: clamp(2.5rem, 8vw, 6rem); /* grows from 2.5rem to 6rem */
   margin-bottom: 0.5rem;
   color: limegreen;
   text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.7);
 }
 
+/* Responsive paragraph text */
 .hero-text p {
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 2vw, 1.5rem); /* scales well on all devices */
   text-shadow: 2px 2px 12px rgba(0, 0, 0, 0.9);
+  color: white;
+  margin-bottom: 1rem;
 }
 
-.hero-text a {
-  display: inline-block; /* Needed for transform to work properly */
-
+.hero a {
   border-radius: 6px;
-  padding: 4px;
+  padding: 0.7rem;
+  width: fit-content;
+  text-align: center;
   text-decoration: none;
   color: white;
-  font-size: 24px;
+  font-size: clamp(1rem, 2.2vw, 1.4rem);
   transition: transform 0.2s ease-in-out;
-}
-
-.create-plan-button {
   background-color: limegreen;
 }
 
-.create-plan-button:hover {
-  transform: scale(1.06); /* Grows the element by 5% */
+.hero a:hover {
+  transform: scale(1.06);
 }

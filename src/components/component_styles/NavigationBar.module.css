@@ -15,11 +15,6 @@
   z-index: 1000;
 }
 
-.container h3 {
-  font-size: 30px;
-  color: limegreen;
-}
-
 .container a {
   padding: 10px;
   text-decoration: none;
@@ -27,37 +22,136 @@
   font-size: 24px;
 }
 
-/* Left section: Logo + nav links */
-.leftContent {
+.logo {
   display: flex;
+  width: fit-content;
+  justify-content: left;
   align-items: center;
-  flex: auto;
-  gap: 0;
+  font-size: 30px;
+  color: limegreen;
 }
 
-/* Center spacer if needed later */
-.centerContent {
+/* Left section: Logo + nav links */
+.linksWrapper {
   display: flex;
-  justify-content: center;
+  width: 100%;
+  flex-direction: row;
+  position: relative;
+}
+
+.links {
+  display: flex;
+  width: 100%;
   align-items: center;
-  flex: 1;
-  position: static;
+  justify-content: center;
+  padding: 0;
+}
+
+.links ul {
+  display: flex;
+  gap: 5px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.links ul li {
+  display: inline;
+}
+
+.linksDropdownButton {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+  position: relative;
+  transform: none;
+  top: auto;
+  right: auto;
+}
+
+@media (max-width: 1016px) {
+  .linksWrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  .logo {
+    font-size: 20px;
+  }
+  .linksDropdownButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px; /* match .container height */
+    margin: 0 auto; /* center horizontally if allowed */
+  }
+
+  .links {
+    position: absolute; /* Important: appear below the button */
+    top: 60px; /* height of nav bar */
+    left: 0;
+    width: 100%;
+    display: none;
+    flex-direction: column;
+    background-color: #2d2d30;
+    z-index: 999; /* Just under nav */
+    padding: 0 30px 0 30px;
+  }
+
+  .links.linksDropdownOpen {
+    display: flex;
+  }
+
+  .links ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; /* More breathing room between items */
+    padding: 0;
+    margin: 0;
+  }
+
+  .links ul li {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  .links ul li a {
+    display: block;
+    padding: 12px 0;
+    text-align: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+  }
+
+  /* Optional: subtle hover effect for feedback */
+  .links ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .loginButton a {
+    font-size: 15px;
+  }
 }
 
 /* Right section: login/profile */
 .rightContent {
   display: flex;
   justify-content: flex-end;
-  flex: 0 0 auto;
-  margin-right: 25px;
 }
 
 /* Login button for non-authenticated users */
 .loginButton {
   background-color: #007bff;
   border-radius: 8px;
-  margin-right: 5px;
   padding-bottom: 5px;
+  font-size: 10px;
 }
 
 /* Profile button and dropdown */

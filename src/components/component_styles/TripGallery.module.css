@@ -10,6 +10,7 @@
 
 .tripTile {
   background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-elevated);
   border: #e6f0ff;
   color: black;
   padding: 1rem;
@@ -118,7 +119,27 @@
 }
 
 .deleteConfirmButtons {
-  margin-top: -10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.noButton {
+  background-color: grey;
+}
+
+.yesButton {
+  background-color: red;
+}
+
+.noButton,
+.yesButton {
+  padding: 5px;
+  width: 50px;
+  border: none;
+  border-radius: 5px;
 }
 
 .searchBar {

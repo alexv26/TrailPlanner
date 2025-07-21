@@ -37,13 +37,10 @@ export default function TripTile({
         <>
           <h3>Are you sure you want to delete this trip?</h3>
           <div className={styles.deleteConfirmButtons}>
-            <button
-              onClick={onCancelConfirm}
-              style={{ backgroundColor: "grey" }}
-            >
+            <button onClick={onCancelConfirm} className={styles.noButton}>
               No
             </button>
-            <button onClick={onClick} style={{ backgroundColor: "red" }}>
+            <button onClick={onClick} className={styles.yesButton}>
               Yes
             </button>
           </div>

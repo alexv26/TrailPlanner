@@ -1,3 +1,8 @@
+:root {
+  --shadow-3d: 7px 7px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
 .main-content {
   margin-top: 70px; /* Adjust based on navbar height */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,

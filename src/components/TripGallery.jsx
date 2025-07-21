@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import TripTile from "./TripTile";
 import styles from "./component_styles/TripGallery.module.css";
@@ -11,6 +11,7 @@ export default function TripGallery({
   deleteMode = false,
   originatingLocation = "/explore",
   onTripDeleted,
+  onPageChange,
 }) {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
@@ -21,6 +22,12 @@ export default function TripGallery({
   const currentTrips = trips.slice((page - 1) * pageSize, page * pageSize);
 
   const [confirmingTripId, setConfirmingTripId] = useState(null);
+
+  useEffect(() => {
+    if (onPageChange) {
+      onPageChange(page); // Notify parent whenever page changes
+    }
+  }, [page, onPageChange]);
 
   const handleClick = deleteMode
     ? (index, trip) => () => {
@@ -91,9 +98,16 @@ export default function TripGallery({
     );
   };
 
+  useEffect(() => {
+    if (page != 1) {
+      localStorage.setItem("showTripGallerySearchBar", false);
+    } else {
+      localStorage.setItem("showTripGallerySearchBar", true);
+    }
+  }, [page]);
+
   return (
     <div>
-      <div className={styles.searchBar}></div>
       <div className={`${styles.tileGrid} ${className}`}>
         {currentTrips.map((trip, index) => {
           const globalIndex = (page - 1) * pageSize + index;
