@@ -7,7 +7,7 @@ export default function MealPlans() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3004/mealplans")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/meal-plans/saved`)
       .then((res) => res.json())
       .then((data) => {
         setMealPlans(data); // Expecting an array of meal plan strings

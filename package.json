@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"node src/server/TrailInfoAPI.cjs\" \"node src/server/NearestHospitalAPI.cjs\" \"node src/server/GPTMealPlanAPI.cjs\" \"node src/server/MongoDB.cjs\"",
+    "dev": "concurrently \"vite\" \"node src/server/server.cjs\" ",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

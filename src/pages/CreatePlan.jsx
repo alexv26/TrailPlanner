@@ -186,9 +186,9 @@ function CreatePlan() {
 
     try {
       const response = await fetch(
-        `http://localhost:${
-          import.meta.env.VITE_TRAIL_INFO_API_PORT
-        }/trailhead?name=${encodeURIComponent(trailName)}`
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/trails/info?name=${encodeURIComponent(trailName)}`
       );
 
       const data = await response.json();
@@ -290,9 +290,9 @@ function CreatePlan() {
       // Now lat and lng are separate variables
 
       const response = await fetch(
-        `http://localhost:${
-          import.meta.env.VITE_NEAREST_HOSPITAL_API_PORT
-        }/nearby-hospitals?lat=${lat}&lng=${lng}`
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/healthcare/nearby-hospitals?lat=${lat}&lng=${lng}`
       );
 
       const data = await response.json();
@@ -338,19 +338,22 @@ function CreatePlan() {
     }));
 
     try {
-      const response = await fetch("http://localhost:3003/generate-meal-plan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
-        body: JSON.stringify({
-          num_nights,
-          num_participants,
-          timestamp: Date.now(), // force freshness
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/meal-plans/generate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "no-cache",
+            Pragma: "no-cache",
+          },
+          body: JSON.stringify({
+            num_nights,
+            num_participants,
+            timestamp: Date.now(), // force freshness
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -462,13 +465,16 @@ function CreatePlan() {
 
       try {
         // 1. Post to trips DB
-        const response = await fetch("http://localhost:3004/trips", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(anonymousFormData),
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_API_BASE_URL}/api/trips/save`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(anonymousFormData),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to submit trip plan");
@@ -486,15 +492,16 @@ function CreatePlan() {
     try {
       // 2. Update user's personal trips
       const userTripResponse = await fetch(
-        "http://localhost:3004/api/userTrips",
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/${
+          user?.username
+        }/trips/add`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            username: user?.username, // make sure `user` is available in scope
-            newTrip: updatedFormData, // store as string if needed
+            newTrip: updatedFormData,
           }),
         }
       );

@@ -8,7 +8,7 @@ export default function Resources() {
   const [resources, setResources] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3004/resources")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/resources`)
       .then((res) => res.json())
       .then((data) => setResources(data))
       .catch((err) => console.error("Failed to load resources:", err));

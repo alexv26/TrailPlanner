@@ -8,7 +8,14 @@ export default function ExplorePastTrips() {
   const [loading, setLoading] = useState(true);
   const [deletingTrips, setDeletingTrips] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [tilesPerPage, setTilesPerPage] = useState(10);
+  // Dynamic tilesPerPage
+  const [tilesPerPage, setTilesPerPage] = useState(() => {
+    const tileWidth = 290;
+    const windowSize = window.innerWidth;
+    console.log("Window size:", windowSize);
+    console.log("Tiles per page:", Math.floor(windowSize / tileWidth) * 2);
+    return Math.floor(windowSize / tileWidth) * 2;
+  }); // tile width = 250px, call it 300 to be safe. with two rows, should be able to fit
   const [searchBarVisible, setSearchBarVisible] = useState(true);
   const { user } = useAuth();
 
@@ -27,7 +34,7 @@ export default function ExplorePastTrips() {
   }
 
   useEffect(() => {
-    fetch("http://localhost:3004/trips")
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/trips`)
       .then((res) => res.json())
       .then((data) => {
         setTrips(data);
@@ -39,16 +46,17 @@ export default function ExplorePastTrips() {
       });
   }, []);
 
+  /* handling tilesPerPage so it dynamically changes for larger screens. 
+  Rule of thumb: each page should have two rows of trips with equal parts betwee, so that one row doesnt have 1000000 trips and the other only 1
+  */
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setTilesPerPage(10);
-      } else {
-        setTilesPerPage(4);
-      }
+      const tileWidth = 290;
+      const windowSize = window.innerWidth;
+      const tpp = Math.floor(windowSize / tileWidth) * 2;
+      setTilesPerPage(tpp);
     };
 
-    // Set initial value
     handleResize();
 
     // Add event listener

@@ -26,7 +26,7 @@ export default function ViewProfile() {
 
   useEffect(() => {
     if (user?.username) {
-      fetch(`http://localhost:3004/api/userTrips/${user.username}`)
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${user.username}`)
         .then((res) => res.json())
         .then((data) => {
           setTrips(data.trips || []);
