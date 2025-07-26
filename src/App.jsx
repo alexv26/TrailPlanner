@@ -50,7 +50,7 @@ function App() {
           <Route
             path="/plan"
             element={
-              <ProtectedRoute redirectTo="/login">
+              <ProtectedRoute redirectTo="/account-management/login">
                 <CreatePlan />
               </ProtectedRoute>
             }
@@ -59,7 +59,10 @@ function App() {
           <Route path="/mealplans" element={<MealPlans />}></Route>
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
           <Route path="/trip" element={<TripDetails />}></Route>
-          <Route path="/login" element={<LoginSignup />}></Route>
+          <Route
+            path="/account-management/:inputMode"
+            element={<LoginSignup />}
+          ></Route>
           <Route path="/error" element={<Error />}></Route>
 
           <Route

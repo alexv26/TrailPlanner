@@ -1,10 +1,10 @@
 .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   height: 60px;
-  padding: 0 20px;
+
   background-color: #2d2d30;
   color: white;
   font-size: 1.5rem;
@@ -15,7 +15,23 @@
   z-index: 1000;
 }
 
-.container a {
+.leftSpacer,
+.rightSpacer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+.leftSpacer {
+  justify-content: flex-start;
+}
+
+.rightSpacer {
+  justify-content: flex-end;
+}
+
+.container .links a {
   padding: 10px;
   text-decoration: none;
   color: white;
@@ -34,14 +50,13 @@
 /* Left section: Logo + nav links */
 .linksWrapper {
   display: flex;
-  width: 100%;
-  flex-direction: row;
-  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto; /* Don't grow or shrink */
 }
 
 .links {
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -147,11 +162,51 @@
 }
 
 /* Login button for non-authenticated users */
+.accountButtons {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.loginButton,
+.signupButton {
+  padding: 0.4em;
+  border-radius: 3px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.loginButton a,
+.signupButton a {
+  font-size: 1.3rem;
+  color: white;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .loginButton {
+  background-color: #676767;
+}
+
+.signupButton {
   background-color: #007bff;
-  border-radius: 8px;
-  padding-bottom: 5px;
-  font-size: 10px;
+}
+
+@media (max-width: 768px) {
+  .loginButton a,
+  .signupButton a {
+    font-size: 0.7rem;
+  }
+
+  .loginButton,
+  .signupButton {
+    padding: 0.4em;
+  }
 }
 
 /* Profile button and dropdown */

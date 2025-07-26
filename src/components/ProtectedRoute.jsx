@@ -3,7 +3,7 @@ import { useAuth } from "./AuthProvider";
 
 export default function ProtectedRoute({
   children,
-  redirectTo = "/login",
+  redirectTo = "/account-management/login",
   requiredRole,
 }) {
   const location = useLocation();

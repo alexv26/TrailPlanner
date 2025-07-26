@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthProvider";
 import styles from "./page_styles/LoginSignup.module.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 export default function LoginSignup() {
   const navigate = useNavigate();
-  const [mode, setMode] = useState("Login");
+  const { inputMode } = useParams();
+  console.log("Mode:", inputMode);
+  const [mode, setMode] = useState(inputMode);
   const [warning, setWarning] = useState("");
   const location = useLocation();
   const from = location.state?.from || "/plan";
@@ -38,13 +40,16 @@ export default function LoginSignup() {
   };
 
   const switchMode = () => {
-    setMode((prevMode) => (prevMode === "Login" ? "Signup" : "Login"));
+    setMode((prevMode) => (prevMode === "login" ? "signup" : "login"));
   };
 
-  const API_BASE = "http://localhost:3004/api"; // adjust as needed for deployment
+  useEffect(() => {
+    setMode(inputMode);
+  }, [inputMode]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const endpoint = mode === "Login" ? "login" : "signup";
+    const endpoint = mode === "login" ? "login" : "signup";
     /*const currentDate = new Date().toLocaleDateString();
     if (endpoint === "signup") {
       setUser((prevUser) => ({
@@ -93,10 +98,10 @@ export default function LoginSignup() {
     <div className={styles.container}>
       <div className={styles.box}>
         <div className={styles.title}>
-          <h1>{mode}</h1>
+          <h1>{mode == "signup" ? "Sign Up" : "Log in"}</h1>
         </div>
         <form onSubmit={handleSubmit}>
-          {mode === "Signup" && (
+          {mode === "signup" && (
             <>
               <div className={styles.inputField}>
                 <label>
@@ -169,21 +174,21 @@ export default function LoginSignup() {
             </div>
           )}
 
-          <div className={styles.buttons}>
+          <div className={styles.submitButton}>
             <button type="submit" onClick={handleSubmit}>
-              {mode}
+              {mode == "signup" ? "Sign Up" : "Log in"}
             </button>
           </div>
         </form>
 
         <div className={styles.switchMode}>
           <p>
-            {mode === "Login"
+            {mode === "login"
               ? "Don't have an account?"
               : "Already have an account?"}
           </p>
           <a onClick={switchMode}>
-            {mode === "Login" ? "Sign up now." : "Login now."}
+            {mode === "login" ? "Sign up now." : "Login now."}
           </a>
         </div>
       </div>

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"node src/server/server.cjs\" ",
+    "start": "node src/server/server.cjs",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

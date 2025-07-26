@@ -5,7 +5,7 @@ import objectId from "bson-objectid";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
-const showMockButton = true;
+const showMockButton = false;
 
 const emergencyContactPlaceholder =
   "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";

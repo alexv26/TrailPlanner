@@ -37,8 +37,10 @@ function NavigationBar() {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.logo}>
-          <h3>TrailPlanner</h3>
+        <div className={styles.leftSpacer}>
+          <div className={styles.logo}>
+            <h3>TrailPlanner</h3>
+          </div>
         </div>
         <div className={styles.linksWrapper}>
           <button
@@ -71,31 +73,38 @@ function NavigationBar() {
             </ul>
           </div>
         </div>
-        <div className={styles.rightContent}>
-          {isLoggedIn ? (
-            <div className={styles.dropdownWrapper}>
-              <button
-                onClick={() => setProfileDropdownOpen((prev) => !prev)}
-                className={styles.profileIconButton}
-              >
-                <p>{user?.username}</p>
-                <UserCircle size={28} />
-              </button>
-              {profileDropdownOpen && (
-                <div className={styles.dropdownMenu}>
-                  <Link to="/profile">View Profile</Link>
-                  {user && user.role === "Admin" && (
-                    <Link to="/admin">Admin Homepage</Link>
-                  )}
-                  <button onClick={handleLogout}>Logout</button>
+        <div className={styles.rightSpacer}>
+          <div className={styles.rightContent}>
+            {isLoggedIn ? (
+              <div className={styles.dropdownWrapper}>
+                <button
+                  onClick={() => setProfileDropdownOpen((prev) => !prev)}
+                  className={styles.profileIconButton}
+                >
+                  <p>{user?.username}</p>
+                  <UserCircle size={28} />
+                </button>
+                {profileDropdownOpen && (
+                  <div className={styles.dropdownMenu}>
+                    <Link to="/profile">View Profile</Link>
+                    {user && user.role === "Admin" && (
+                      <Link to="/admin">Admin Homepage</Link>
+                    )}
+                    <button onClick={handleLogout}>Logout</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className={styles.accountButtons}>
+                <div className={styles.loginButton}>
+                  <Link to="/account-management/login">Login</Link>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className={styles.loginButton}>
-              <Link to="/login">Login/Signup</Link>
-            </div>
-          )}
+                <div className={styles.signupButton}>
+                  <Link to="/account-management/signup">Sign up</Link>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

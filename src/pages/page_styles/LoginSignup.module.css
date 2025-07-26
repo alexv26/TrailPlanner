@@ -34,20 +34,18 @@
   margin-top: 5px;
 }
 
-.buttons {
+.submitButton {
   display: flex;
   justify-content: center;
   gap: 30px;
 }
 
-.buttons button {
+.submitButton button {
   display: flex;
-  font-weight: bold;
-  font-size: 18px;
+  font-size: 1.2rem;
   width: fit-content;
-  background-color: #007bff;
-  color: white;
-  border: none;
+  color: black;
+  border-color: rgb(124, 124, 124);
   border-radius: 5px;
   padding: 5px;
 }
