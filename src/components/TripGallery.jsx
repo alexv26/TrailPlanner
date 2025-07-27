@@ -64,21 +64,31 @@ export default function TripGallery({
   }
 
   const renderPageButtons = () => {
+    if (totalPages === 0) return null;
+
     const pages = [];
 
     if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      // Show all pages if 5 or fewer
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
     } else {
-      pages.push(1);
+      pages.push(1); // Always show first page
+
       if (page > 3) pages.push("...");
-      const middlePages = [
-        Math.max(2, page - 1),
-        page,
-        Math.min(totalPages - 1, page + 1),
-      ].filter((p, i, self) => self.indexOf(p) === i);
-      pages.push(...middlePages);
+
+      for (
+        let j = Math.max(2, page - 1);
+        j <= Math.min(totalPages - 1, page + 1);
+        j++
+      ) {
+        pages.push(j);
+      }
+
       if (page < totalPages - 2) pages.push("...");
-      pages.push(totalPages);
+
+      pages.push(totalPages); // Always show last page
     }
 
     return pages.map((p, i) =>
@@ -125,24 +135,15 @@ export default function TripGallery({
       </div>
 
       <div className={styles.pagination}>
-        <button onClick={() => setPage(1)} disabled={page === 1}>
-          First
-        </button>
         <button onClick={() => setPage(page - 1)} disabled={page === 1}>
-          Prev
+          {"<"}
         </button>
         {renderPageButtons()}
         <button
           onClick={() => setPage(page + 1)}
           disabled={page === totalPages}
         >
-          Next
-        </button>
-        <button
-          onClick={() => setPage(totalPages)}
-          disabled={page === totalPages}
-        >
-          Last
+          {">"}
         </button>
       </div>
     </div>

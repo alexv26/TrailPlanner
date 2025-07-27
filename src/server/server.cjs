@@ -18,5 +18,7 @@ app.use("/api/healthcare", require("./routes/healthcare.cjs"));
 app.use("/api/trails", require("./routes/trails.cjs"));
 
 app.listen(PORT, () => {
-  console.log(`🚀 Unified API server running on http://localhost:${PORT}`);
+  console.log(
+    `🚀 Unified API server running on ${process.env.VITE_API_BASE_URL}`
+  );
 });

@@ -9,16 +9,10 @@ export default function ResourceLinkTile({
   return (
     <>
       <a href={directTo}>
-        <div className={styles["container"]}>
-          <div className={styles["tile"]}>
-            <div className={styles["image"]}>
-              <img src={imgLink} />
-            </div>
-            <div className={styles["text"]}>
-              <h1>{title}</h1>
-              <p>{bodyText}</p>
-            </div>
-          </div>
+        <div className={styles.tile}>
+          <img src={imgLink} />
+          <h3>{title}</h3>
+          <p>{bodyText}</p>
         </div>
       </a>
     </>

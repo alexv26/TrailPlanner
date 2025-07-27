@@ -16,15 +16,27 @@ export default function Resources() {
 
   return (
     <>
-      {resources.map((resource, index) => (
-        <ResourceLinkTile
+      <div className={styles.container}>
+        {resources.map((resource, index) => (
+          <ResourceLinkTile
+            key={index}
+            title={resource.title}
+            bodyText={resource.bodyText}
+            imgLink={resource.imgLink}
+            directTo={resource.directTo}
+          />
+        ))}
+      </div>
+    </>
+  );
+}
+
+/*
+<ResourceLinkTile
           key={index}
           title={resource.title}
           bodyText={resource.bodyText}
           imgLink={resource.imgLink}
           directTo={resource.directTo}
         />
-      ))}
-    </>
-  );
-}
+        */
