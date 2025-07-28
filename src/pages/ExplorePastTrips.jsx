@@ -92,7 +92,6 @@ export default function ExplorePastTrips() {
             />
             <span className={styles.searchIcon}>🔍</span>
           </div>
-          <hr />
         </div>
       )}
 

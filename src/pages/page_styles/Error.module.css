@@ -9,7 +9,7 @@
 
 .content {
   height: fit-content;
-  background-color: white;
+  background-color: var(--color-tile-background);
   padding: 2rem;
   border-radius: 8px;
   height: fit-content;
@@ -36,20 +36,21 @@
 }
 
 .text h2 {
-  color: rgb(46, 46, 46);
+  color: yellow;
   font-size: 50px;
   font-weight: bold;
   margin: 0;
 }
 
 .text p {
-  color: black;
+  color: var(--color-tile-text);
   margin: 0;
 }
 
 .text a {
   margin-top: 10px;
-  background-color: #007bff;
+  background-color: var(--color-button-background);
+  text-decoration: none;
   padding: 10px;
   border-radius: 8px;
   color: white;

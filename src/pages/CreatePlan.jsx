@@ -1110,7 +1110,7 @@ function CreatePlan() {
             </label>
             <p
               style={{
-                color: "blue",
+                color: "yellow",
                 fontWeight: "bold",
                 marginTop: "-10px",
               }}

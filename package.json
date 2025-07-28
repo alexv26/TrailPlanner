@@ -12,6 +12,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tiptap/pm": "^3.0.7",
+    "@tiptap/react": "^3.0.7",
+    "@tiptap/starter-kit": "^3.0.7",
     "axios": "^1.9.0",
     "bcryptjs": "^3.0.2",
     "bson-objectid": "^2.0.4",

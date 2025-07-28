@@ -1,6 +1,12 @@
 :root {
   --shadow-3d: 7px 7px rgba(0, 0, 0, 0.4);
   --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --color-transluscent-white: rgba(255, 255, 255, 0.9);
+  --color-navbar-background: #1e293b;
+  --color-tile-background: #273549;
+  --color-tile-text: #f8fafc;
+  --color-tile-input: #1e293b;
+  --color-button-background: #3b82f6;
 }
 
 .main-content {
@@ -28,6 +34,17 @@
   background-position: center;
   background-repeat: no-repeat;
   opacity: 0.9; /* Optional: for contrast */
+}
+
+.background-color {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  background: linear-gradient(to right, #0f172a, #334155);
 }
 
 /* Make it so user cannot select text in a button */

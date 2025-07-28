@@ -8,7 +8,8 @@
 
 .content {
   height: fit-content;
-  background-color: white;
+  background-color: var(--color-tile-background);
+  color: var(--color-tile-text);
   padding: 1rem;
   border-radius: 8px;
   height: fit-content;
@@ -24,7 +25,7 @@
 .separator {
   border: none;
   height: 2px;
-  background-color: #ccc;
+  background-color: var(--color-navbar-background);
   margin: 1rem 0;
   width: 100%;
 }

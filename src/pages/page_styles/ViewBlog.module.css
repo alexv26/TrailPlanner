@@ -1,0 +1,41 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-tile-background);
+  color: var(--color-tile-text);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.header {
+  padding: 0 20px;
+  background-color: var(--color-navbar-background);
+  border-radius: 8px;
+}
+
+.header i {
+  font-size: 1.2rem;
+}
+
+.container img {
+  width: 60%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.container .blogTitle {
+  font-size: 4rem;
+  margin: 20px 0;
+}
+
+.bodyText {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  padding: 0 20px;
+  border-radius: 8px;
+}
+
+.bodyText h1 {
+  font-size: 2.5rem;
+}

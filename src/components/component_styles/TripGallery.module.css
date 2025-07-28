@@ -9,10 +9,10 @@
 }
 
 .tripTile {
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: var(--color-tile-background);
   box-shadow: var(--shadow-elevated);
   border: #e6f0ff;
-  color: black;
+  color: var(--color-tile-text);
   padding: 1rem;
   border-radius: 8px;
   width: 250px;
@@ -22,12 +22,12 @@
 }
 
 .tripTile strong {
-  color: rgb(57, 57, 57);
+  color: var(--color-tile-text);
+  font-weight: 900;
 }
 
 .tripTile:hover {
-  background-color: white;
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 .pagination {
@@ -40,8 +40,8 @@
 }
 
 .pagination button {
-  background-color: grey;
-  color: white;
+  background-color: var(--color-tile-background);
+  color: var(--color-tile-text);
   padding: 10px;
   border-radius: 5px;
   border: none;

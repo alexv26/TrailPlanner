@@ -1,4 +1,31 @@
 .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.buttonWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.createResourceButton {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  font-size: 1rem;
+}
+
+.tiles {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
@@ -6,19 +33,19 @@
   padding: 20px;
 }
 
-.container img {
+.tiles img {
   max-width: 100%;
   height: auto;
   border-radius: 8px;
 }
 
-.container a {
+.tiles a {
   text-decoration: none;
   color: black;
 }
 
 @media (max-width: 768px) {
-  .container {
+  .tiles {
     grid-template-columns: 1fr;
   }
 }

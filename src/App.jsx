@@ -20,6 +20,8 @@ import ViewProfile from "./pages/ViewProfile.jsx";
 import Error from "./pages/Error.jsx";
 import Admin from "./pages/Admin.jsx";
 import "./App.css";
+import CreateBlog from "./pages/CreateBlog.jsx";
+import ViewBlog from "./pages/ViewBlog.jsx";
 
 function RouteWatcher() {
   const location = useLocation();
@@ -41,7 +43,7 @@ function App() {
   return (
     <Router>
       <RouteWatcher />
-      <div className="background-image" />
+      <div className="background-color" />
       <div className="main-content">
         <NavigationBar />
         <Routes>
@@ -59,6 +61,8 @@ function App() {
           <Route path="/mealplans" element={<MealPlans />}></Route>
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
           <Route path="/trip" element={<TripDetails />}></Route>
+          <Route path="/createblog" element={<CreateBlog />}></Route>
+          <Route path="/blog/:blogId" element={<ViewBlog />}></Route>
           <Route
             path="/account-management/:inputMode"
             element={<LoginSignup />}
