@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthProvider";
 import objectId from "bson-objectid";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
-const showMockButton = false;
+const showMockButton = true;
 
 const emergencyContactPlaceholder =
   "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
@@ -80,8 +80,12 @@ function convertDate(releaseDate) {
   return `${monthName} ${dayNumber}, ${year}`;
 }
 
-function CreatePlan() {
-  const finalPage = 7;
+// Form fields for each page. Each key corresponds to a page title, and each value are the fields for that page
+//! Need to add automation script to each field where it applies
+import formFields from "../resources/formFields.json";
+
+export default function CreatePlan() {
+  const finalPage = Object.keys(formFields).length + 1;
   const [page, setPage] = useState(() => {
     const stored = localStorage.getItem("page");
     if (stored) {
@@ -95,44 +99,15 @@ function CreatePlan() {
   });
 
   const { state } = useLocation();
+  const navigate = useNavigate();
   const tripData = state?.trip || {};
   const { user } = useAuth();
-  const initialForm = {
-    createdBy: "",
-    tripName: "",
-    leaders: "",
-    startDate: "",
-    endDate: "",
-    location: "",
-    groupSize: "",
-    emergencyContact: "",
-    permits: "",
-    difficulty: "",
-    allTrailsLink: "",
-    trailhead: "",
-    trailheadAddress: "",
-    trailheadParking: "",
-    distanceGain: "",
-    elevationGain: "",
-    activityTime: "",
-    topoMap: "",
-    departure: "",
-    returnTime: "",
-    mealBreaks: "",
-    overnightPlans: "",
-    backupExit: "",
-    mealPlan: "",
-    weatherPlan: "",
-    injuryPlan: "",
-    lateReturn: "",
-    altRoute: "",
-    campsiteName: "",
-    campsiteHasBathrooms: "",
-    campsitePrice: "",
-    campsiteAddress: "",
-    nearestHospital: "",
-    placeholderImg: "",
-  };
+  const initialForm = Object.values(formFields)
+    .flatMap((section) => Object.keys(section))
+    .reduce((acc, key) => {
+      acc[key] = "";
+      return acc;
+    }, {});
 
   // Merge trip data into the initial form
 
@@ -440,12 +415,10 @@ function CreatePlan() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setPage((prev) => prev + 1);
-    const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
 
-    // removing id so there are no duplicates in DB
+    const imgUrl = `src/assets/outdoor_photos/${assignImage()}`; // future: allow user upload
     const { _id, ...rest } = formData;
-
-    const generatedId = objectId();
+    const generatedId = objectId(); // pre-generating a shared ID
 
     const updatedFormData = {
       ...rest,
@@ -454,17 +427,14 @@ function CreatePlan() {
       _id: generatedId.toString(),
     };
 
-    //setFormData(updatedFormData);
+    let successful = true;
 
+    // Step 1: Publish to public DB (if chosen)
     if (publishForm) {
-      console.log("Placeholder img:", imgUrl);
-
-      // Removing names and emergency contact so leaders stay anonymous
       const { emergencyContact, leaders, campsitePrice, ...anonymousFormData } =
         updatedFormData;
 
       try {
-        // 1. Post to trips DB
         const response = await fetch(
           `${import.meta.env.VITE_API_BASE_URL}/api/trips/save`,
           {
@@ -476,21 +446,17 @@ function CreatePlan() {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Failed to submit trip plan");
-        }
-
-        console.log("✅ Trip plan submitted successfully!"); // 2. Add trip to user's personal trip list
+        if (!response.ok) throw new Error("Failed to submit trip to public DB");
+        console.log("✅ Public trip saved.");
       } catch (error) {
-        console.error("❌ Error submitting trip plan:", error);
-        alert(
-          "There was an error submitting your trip plan. Please try again."
-        );
+        successful = false;
+        console.error("❌ Error submitting public trip:", error);
+        alert("Error submitting your trip to the public database.");
       }
     }
 
+    // Step 2: Save to user's private trip list
     try {
-      // 2. Update user's personal trips
       const userTripResponse = await fetch(
         `${import.meta.env.VITE_API_BASE_URL}/api/users/${
           user?.username
@@ -506,14 +472,18 @@ function CreatePlan() {
         }
       );
 
-      if (!userTripResponse.ok) {
+      if (!userTripResponse.ok)
         throw new Error("Failed to save trip to user profile");
-      }
 
       console.log("✅ Trip also saved to user profile!");
+
+      // Step 3: Redirect to /viewplan/:id
+      if (successful) {
+        navigate(`/viewplan/${generatedId.toString()}`);
+      }
     } catch (error) {
-      console.error("❌ Error submitting trip plan:", error);
-      alert("There was an error submitting your trip plan. Please try again.");
+      console.error("❌ Error saving to user profile:", error);
+      alert("There was an error saving your trip. Please try again.");
     }
   };
 
@@ -530,14 +500,7 @@ function CreatePlan() {
     return () => clearTimeout(handler);
   }, [formData.trailhead, page]);
 
-  useEffect(() => {
-    if (page === 8) {
-      generatePDF(formData);
-    }
-  }, [page]);
-
   const hasFetchedHospitals = useRef(false);
-
   useEffect(() => {
     if (
       page === 7 &&
@@ -550,624 +513,125 @@ function CreatePlan() {
     }
   }, [page, formData.trailheadAddress]);
 
-  async function generatePDF(formData) {
-    const doc = new jsPDF();
-    const lineHeight = 10;
-    const pageHeight = doc.internal.pageSize.height;
-    const margin = 15;
-    const maxWidth = 180;
-    let y = margin;
-
-    const drawLine = () => {
-      doc.setDrawColor(200);
-      doc.line(margin, y, pageHeight - margin, y);
-      y += 5;
-    };
-
-    const addHeader = () => {
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(32);
-      doc.text(formData.tripName, margin, y);
-      y += 10;
-    };
-
-    const addSectionTitle = (title) => {
-      // Add extra space before section title
-      y += 5; // increase this value as needed
-      if (y > pageHeight - 30) {
-        doc.addPage();
-        y = margin;
-      }
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(16);
-      doc.setTextColor(0, 102, 204);
-      doc.text(title, margin, y);
-      y += 6;
-      doc.setTextColor(0, 0, 0);
-    };
-
-    const addText = (label, value) => {
-      if (!value) value = "N/A";
-
-      // Split manually by line breaks first
-      const paragraphs = value.split("\n");
-      let totalHeight = 5; // For label
-
-      // Calculate how much space all wrapped lines will take
-      const wrappedLines = paragraphs.map((p) =>
-        doc.splitTextToSize(p, maxWidth)
-      );
-      wrappedLines.forEach((lines) => {
-        totalHeight += lines.length * 6;
-      });
-
-      // Add page if needed
-      if (y + totalHeight > pageHeight - margin) {
-        doc.addPage();
-        y = margin;
-      }
-
-      // Draw label
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(11);
-      if (label) {
-        doc.text(`${label}:`, margin, y);
-        y += 5;
-      }
-
-      // Draw wrapped lines
-      doc.setFont("helvetica", "normal");
-      wrappedLines.forEach((lines) => {
-        doc.text(lines, margin, y);
-        y += lines.length * 6;
-      });
-    };
-
-    const addFooter = () => {
-      const totalPages = doc.internal.getNumberOfPages();
-      for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        doc.setFontSize(10);
-        doc.setTextColor(150); // Page number
-
-        doc.text(`Page ${i} of ${totalPages}`, margin, pageHeight - 10); // Banner message
-
-        const bannerText =
-          "This trip plan was generated through the TrailPlanner website, developed by Alexander Velsmid (https://github.com/alexv26)";
-        const bannerY = pageHeight - 5;
-        doc.setFontSize(8);
-        doc.setTextColor(100);
-        doc.text(bannerText, margin, bannerY);
-      }
-    };
-
-    // Generate the PDF
-    addHeader();
-
-    addSectionTitle("Trip Overview");
-    addText("Trip Leaders", formData.leaders);
-    addText(
-      "Trip Dates",
-      `${convertDate(formData.startDate)} - ${convertDate(formData.endDate)}`
-    );
-    addText("Number of participants", formData.groupSize);
-
-    addSectionTitle("Route Information");
-    addText("Trailhead", formData.trailhead);
-    addText("Trailhead Address", formData.trailheadAddress);
-    addText("AllTrails Link", formData.allTrailsLink);
-    addText("Distance", formData.distanceGain);
-    addText("Elevation Gain", formData.elevationGain);
-    addText("Estimated Activity Time", formData.activityTime);
-    addText("Difficulty", formData.difficulty);
-    addText("Trail Map", formData.topoMap);
-    addText("Alternative Route", formData.altRoute);
-    addText("Backup Exit Points", formData.backupExit);
-    addText("Necessary Permits", formData.permits);
-
-    if (formData.startDate !== formData.endDate) {
-      addSectionTitle("Overnight Logistics");
-      addText("Campsite", formData.campsiteName);
-      addText("Campsite Address", formData.campsiteAddress);
-      addText("Campsite Price", formData.campsitePrice);
-      addText(
-        "Campsite Has Bathroom Access",
-        formData.campsiteHasBathrooms ? "Yes" : "No"
-      );
-    }
-
-    addSectionTitle("Scheduling Logistics");
-    addText("Departure Time & Place", formData.departure);
-    addText("Estimated Return Time", formData.returnTime);
-    addText("Meal Breaks", formData.mealBreaks);
-    addText("Overnight Plans", formData.overnightPlans);
-
-    addSectionTitle("Meal Plan");
-    addText("", formData.mealPlan);
-
-    addSectionTitle("Safety & Emergency Plan");
-    addText("Nearest Hospitals", formData.nearestHospital);
-    addText("Emergency Contact", formData.emergencyContact);
-    addText("Weather Plan", formData.weatherPlan);
-    addText("Injury Plan", formData.injuryPlan);
-    addText("Late Return Protocol", formData.lateReturn);
-
-    addFooter();
-
-    const pdfBlob = doc.output("blob");
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    // Display in iframe
-    const viewer = document.getElementById("pdfViewer");
-    if (viewer) {
-      viewer.src = pdfUrl;
-    }
-  }
-
   return (
     <div className={styles.formContainer}>
-      <form onSubmit={page === finalPage - 1 ? handleSubmit : handleNext}>
-        {page === 1 && (
-          <>
-            <h2>Create a Trip Plan</h2>
-            {showMockButton && (
-              <button type="button" onClick={() => setFormData(mockFormData)}>
-                Fill with Mock Data
-              </button>
+      <h1 className={styles.header}>
+        {formFields[page]?.header || "Create a Trip Plan"}
+      </h1>
+      {showMockButton && (
+        <button
+          type="button"
+          onClick={() => setFormData(mockFormData)}
+          className="btn btn-info"
+        >
+          Mock Data
+        </button>
+      )}
+      <form className={styles.form} onSubmit={handleSubmit}>
+        {Object.entries(formFields[page] || {}).map(([key, field]) => (
+          <div key={key} className={styles.formGroup}>
+            {field.type !== "checkbox" && (
+              // If checkbox, the label is handled in the input
+              <label htmlFor={key} className={styles.label}>
+                {field.label}
+                {field.required && <span className={styles.required}>*</span>}
+              </label>
             )}
-            <label>
-              Trip Name:
-              <input
-                name="tripName"
-                value={formData.tripName}
-                onChange={handleChange}
-                placeholder="Day Trip to Mt. Lafayette"
-                required
-              />
-            </label>
-            <label>
-              General Trip Location:
-              <input
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                placeholder="Franconia, NH"
-                required
-              />
-            </label>
-            <label>
-              Trip Leaders:
-              <input
-                name="leaders"
-                value={formData.leaders}
-                onChange={handleChange}
-                placeholder="Alex Velsmid and Thomas Gregory"
-                required
-              />
-            </label>
-            <div className={styles["date-range"]}>
-              <label>
-                Start Date:
-                <input
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-
-              <label>
-                End Date:
-                <input
-                  type="date"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  required
-                />
-              </label>
-            </div>
-          </>
-        )}
-
-        {page === 2 && (
-          <>
-            <h2>Group and Logistic Information</h2>
-            <label>
-              Number of participants:
-              <input
-                name="groupSize"
-                value={formData.groupSize}
-                onChange={handleChange}
-                placeholder="7"
-                required
-              />
-            </label>
-            <label>
-              Leader Emergency Contact Info:
+            {field.type === "textarea" ? (
               <textarea
-                name="emergencyContact"
-                rows="2"
-                value={formData.emergencyContact}
+                id={key}
+                name={key}
+                rows={field.rows || 3}
+                placeholder={field.placeholder}
+                value={formData[key] || ""}
                 onChange={handleChange}
-                placeholder={emergencyContactPlaceholder}
-                required
+                required={field.required}
               />
-            </label>
-            <label>
-              Permits or Parking Passes:
-              <input
-                name="permits"
-                value={formData.permits}
-                placeholder="Insert either permits required and price or N/A"
-                onChange={handleChange}
-              />
-            </label>
-          </>
-        )}
-
-        {page == 3 && (
-          <>
-            <h2>Overnight Logistics</h2>
-            <label>
-              Campsite Name
-              <input
-                name="campsiteName"
-                value={formData.campsiteName}
-                placeholder="Enter campsite name and link"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Campsite Address
-              <textarea
-                name="campsiteAddress"
-                value={formData.campsiteAddress}
-                placeholder="Enter address of the campsite, including driving instructions if necessary"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Campsite Price
-              <input
-                name="campsitePrice"
-                value={formData.campsitePrice}
-                placeholder="Enter cost of campsite"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              Campsite has bathroom access
-              <input
-                style={{ width: "15px", height: "auto" }}
-                type="checkbox"
-                name="campsiteHasBathrooms"
-                checked={formData.campsiteHasBathrooms}
-                onChange={handleChange}
-              />
-            </label>
-          </>
-        )}
-
-        {page == 4 && (
-          <>
-            <h2>Activity Information</h2>
-            <label>
-              AllTrails Link:
-              <input
-                name="allTrailsLink"
-                value={formData.allTrailsLink}
-                placeholder="https://www.alltrails.com/trail/us/new-hampshire/mount-lafayette"
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Trailhead Name:
-              <input
-                name="trailhead"
-                value={formData.trailhead}
-                placeholder="Falling Waters Trailhead"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label>
-              Trailhead Address
-              <textarea
-                name="trailheadAddress"
-                value={formData.trailheadAddress}
-                placeholder="123 Trailhead Rd, Franconia, NH"
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <p
-              style={{
-                marginTop: "-10px",
-                marginBottom: "5px",
-                color: "red",
-                fontSize: "14px",
-                fontWeight: "bold",
-              }}
-            >
-              Warning: address might not always be correct. Please double check
-              before submission.
-            </p>
-
-            <label>
-              Distance (mi):
-              <input
-                name="distanceGain"
-                value={formData.distanceGain}
-                placeholder="7.5 mi"
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Elevation Gain (ft):
-              <input
-                name="elevationGain"
-                value={formData.elevationGain}
-                placeholder="3500 ft"
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Estimated Activity Time:
-              <input
-                name="activityTime"
-                value={formData.activityTime}
-                onChange={handleChange}
-                placeholder="7 hrs."
-                required
-              />
-            </label>
-            <label>
-              Difficulty:
+            ) : field.type === "select" ? (
               <select
-                name="difficulty"
-                value={formData.difficulty}
+                id={key}
+                name={key}
+                value={formData[key] || ""}
+                onChange={handleChange}
+                required={field.required}
+              >
+                {field.options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            ) : field.type === "select" ? (
+              <select
+                name={key}
+                value={formData[key]}
                 onChange={handleChange}
                 className={styles["custom-select"]}
-              >
-                <option value="">Select</option>
-                <option value="Easy">Easy</option>
-                <option value="Moderate">Moderate</option>
-                <option value="Hard">Hard</option>
-                <option value="Very Hard">Very Hard</option>
-              </select>
-            </label>
-          </>
-        )}
+              ></select>
+            ) : field.type === "checkbox" ? (
+              <label className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  name={key}
+                  checked={formData[key]}
+                  onChange={handleChange}
+                  required={field.required}
+                />
+                {field.label}
+              </label>
+            ) : field.type == null ? null : (
+              <input
+                id={key}
+                name={key}
+                type={field.type || "text"}
+                placeholder={field.placeholder}
+                value={formData[key] || ""}
+                onChange={handleChange}
+                required={field.required}
+              />
+            )}
+          </div>
+        ))}
 
-        {page === 5 && (
-          <>
-            <h2>Timing and Schedule Information</h2>
-            <label>
-              Departure Time & Place:
+        {page === finalPage && (
+          <div className={styles.publishSection}>
+            <label className={styles.checkboxLabel}>
               <input
-                name="departure"
-                value={formData.departure}
-                onChange={handleChange}
-                placeholder="7am from the OA office"
-                required
-              />
-            </label>
-            <label>
-              Estimated Return Time:
-              <input
-                name="returnTime"
-                value={formData.returnTime}
-                onChange={handleChange}
-                placeholder="5pm"
-                required
-              />
-            </label>
-            <label>
-              Planned Rest or Meal Breaks:
-              <input
-                name="mealBreaks"
-                value={formData.mealBreaks}
-                onChange={handleChange}
-                placeholder="Lunch at the summit, around 12pm"
-                required
-              />
-            </label>
-            <label>
-              Backup Exit Points:
-              <input
-                name="backupExit"
-                value={formData.backupExit}
-                onChange={handleChange}
-                placeholder="Exit off the falling water trail before the ridge, ~1.5 miles from trialhead"
-                required
-              />
-            </label>
-          </>
-        )}
-
-        {page == 6 && (
-          <>
-            <h2>Meal Planning</h2>
-            <label>
-              Meal Plan:
-              <textarea
-                name="mealPlan"
-                rows="15"
-                value={formData.mealPlan}
-                onChange={handleChange}
-                placeholder={mealPlanPlaceholder}
-                required
-              />
-            </label>
-            <button type="button" onClick={generateMealPlan}>
-              Have AI generate a meal plan
-            </button>
-            <button
-              type="button"
-              onClick={() => window.open("/mealplans", "_blank")}
-            >
-              Explore existing mealplans
-            </button>
-          </>
-        )}
-
-        {page === 7 && (
-          <>
-            <h2>Contingency and Safety Plans</h2>
-            <label>
-              Nearest Hospitals:
-              <textarea
-                name="nearestHospital"
-                value={formData.nearestHospital}
-                onChange={handleChange}
-                placeholder={`1. Nearest Hospital 1 addr \n2. Nearest Hospital 2 addr \n3. Nearest Hospital 3 addr`}
-                required
-              />
-            </label>
-            <p
-              style={{
-                marginTop: "-10px",
-                marginBottom: "5px",
-                color: "red",
-                fontSize: "14px",
-                fontWeight: "bold",
-              }}
-            >
-              Warning: this list is auto generated. please verify these options
-              are valid.
-            </p>
-            <label>
-              Weather Plan:
-              <textarea
-                name="weatherPlan"
-                value={formData.weatherPlan}
-                onChange={handleChange}
-                placeholder={weatherContingencyPlaceholder}
-                required
-              />
-            </label>
-            <label>
-              Injury Plan:
-              <textarea
-                name="injuryPlan"
-                value={formData.injuryPlan}
-                onChange={handleChange}
-                placeholder={injuryContingencyPlaceholder}
-                required
-              />
-            </label>
-            <label>
-              Late Return Protocol:
-              <textarea
-                name="lateReturn"
-                value={formData.lateReturn}
-                placeholder={lateReturnProtocolPlaceholder}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Alternative Route:
-              <textarea
-                name="altRoute"
-                value={formData.altRoute}
-                placeholder={alternativeRoutePlaceholder}
-                onChange={handleChange}
-              />
-            </label>
-            <p>
-              NOTE: If a contingency should be enacted before departure, a new
-              trip plan should be formed.
-            </p>
-            <label
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                marginTop: "20px",
-              }}
-            >
-              <b>Publish form to public database?</b>
-              <input
-                style={{ width: "15px", height: "auto" }}
                 type="checkbox"
-                name="campsiteHasBathrooms"
                 checked={publishForm}
                 onChange={handleCheckbox}
               />
+              Publish this trip plan to the public database
             </label>
-            <p
-              style={{
-                color: "yellow",
-                fontWeight: "bold",
-                marginTop: "-10px",
-              }}
-            >
-              Note: names and emergency contact info is removed if you chose to
-              share your trip plan.
-            </p>
-          </>
+          </div>
         )}
-
-        {page === 8 && (
-          <>
-            <h2>Form Submitted</h2>
-            <p>
-              Thank you for completing your trip plan! Please see your created
-              trip plan below. To download it and view it later, push the
-              download button at the top right of the PDF viewer.
-            </p>
-            <div
-              style={{ display: "flex", gap: "1rem", alignItems: "flex-start" }}
-            >
-              <iframe
-                id="pdfViewer"
-                title="Trip Plan PDF"
-                style={{
-                  width: "100%",
-                  height: "600px",
-                  border: "1px solid #ccc",
-                  flexGrow: 1,
-                }}
-              />
-            </div>
-          </>
-        )}
-
         <div className={styles.formNavigation}>
-          {page > 1 && page < finalPage + 1 && (
-            <button type="button" onClick={handleBack}>
+          {page > 1 && (
+            <button
+              type="button"
+              onClick={handleBack}
+              className="btn btn-secondary"
+            >
               Back
             </button>
           )}
-
-          {page < finalPage && (
-            <button type="button" onClick={handleNext}>
+          {page < finalPage ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              className="btn btn-primary"
+            >
               Next
             </button>
-          )}
-
-          {page === finalPage && (
-            <button type="submit" onClick={handleSubmit}>
-              Submit Plan
-            </button>
+          ) : (
+            <>
+              <button type="submit" className="btn btn-success">
+                Submit
+              </button>
+            </>
           )}
         </div>
       </form>
     </div>
   );
 }
-
-export default CreatePlan;

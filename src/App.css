@@ -54,3 +54,46 @@ button {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE/Edge */
 }
+
+/* ===========================
+   Print Styles
+   =========================== */
+@media print {
+  /* Hide navigation bar and background */
+  .navigation-wrapper,
+  nav,
+  .background-color {
+    display: none !important;
+  }
+
+  /* Expand main content to full width */
+  .main-content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Optional: remove shadows or colors that don’t print well */
+  .tripDetailsContainer,
+  .tile {
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Avoid breaking sections across pages */
+  .tile,
+  .fieldContent {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  h1,
+  h2 {
+    page-break-after: avoid;
+  }
+
+  .hide-when-printing {
+    display: none !important;
+  }
+}

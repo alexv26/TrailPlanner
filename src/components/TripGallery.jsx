@@ -38,22 +38,32 @@ export default function TripGallery({
         }
       }
     : (index, trip) => () =>
-        navigate(`/trip`, { state: { trip, from: originatingLocation } });
+        navigate(`/viewplan/${trip._id}`, {
+          state: { from: originatingLocation },
+        });
 
   async function deleteTrip(trip) {
     console.log("deleting trip with trip id:", trip._id);
 
     // Delete from user DB
-    await fetch("http://localhost:3004/api/userTrips", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username: trip.createdBy, tripId: trip._id }),
-    });
+    await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/users/${
+        user.username
+      }/trips/delete`,
+      {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: trip.createdBy, tripId: trip._id }),
+      }
+    );
 
     // delete from trips DB
-    await fetch(`http://localhost:3004/trips/${trip._id}`, {
-      method: "DELETE",
-    });
+    await fetch(
+      `${import.meta.env.VITE_API_BASE_URL}/api/trips/${trip._id}/delete`,
+      {
+        method: "DELETE",
+      }
+    );
 
     setConfirmingTripId(null); // Reset after deletion
 
