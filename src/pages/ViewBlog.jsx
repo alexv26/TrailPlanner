@@ -1,11 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../components/AuthProvider";
 import styles from "./page_styles/ViewBlog.module.css";
 
 export default function ViewBlog() {
   const { blogId } = useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [blog, setBlog] = useState(null);
-  console.log("Viewing blog with id:", blogId);
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/api/resources/${blogId}`)
       .then((res) => {
@@ -17,8 +20,6 @@ export default function ViewBlog() {
   }, [blogId]);
 
   if (!blog) return <div className={styles.container}>Loading...</div>; //! Change to loading spinner later
-
-  console.log("Fetched blog data:", blog);
 
   function formatDateWithOrdinal(dateString) {
     const date = new Date(dateString);
@@ -43,9 +44,7 @@ export default function ViewBlog() {
       <div className={styles.header}>
         <h1 className={styles.blogTitle}>{blog.title}</h1>
         <p>
-          <p>
-            <i>{formatDateWithOrdinal(blog.date)}</i>
-          </p>
+          <i>{formatDateWithOrdinal(blog.date)}</i>
         </p>
       </div>
 
@@ -53,6 +52,34 @@ export default function ViewBlog() {
         className={styles.bodyText}
         dangerouslySetInnerHTML={{ __html: blog.bodyText }}
       />
+      {user && (user.role === "Admin" || user.role === "Editor") && (
+        <div className={styles.deleteButtonWrapper}>
+          <button
+            className={styles.deleteButton}
+            onClick={() => {
+              if (
+                window.confirm("Are you sure you want to delete this blog?")
+              ) {
+                fetch(
+                  `${
+                    import.meta.env.VITE_API_BASE_URL
+                  }/api/resources/${blogId}`,
+                  {
+                    method: "DELETE",
+                  }
+                )
+                  .then((res) => {
+                    if (!res.ok) throw new Error("Failed to delete blog");
+                    navigate("/resources");
+                  })
+                  .catch((err) => console.error("Error deleting blog:", err));
+              }
+            }}
+          >
+            Delete Blog
+          </button>
+        </div>
+      )}
     </div>
   );
 }

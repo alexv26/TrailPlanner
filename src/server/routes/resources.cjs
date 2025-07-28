@@ -72,4 +72,21 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  const db = await getDb();
+  const resourceId = req.params.id;
+  if (!ObjectId.isValid(resourceId))
+    return res.status(400).json({ message: "Invalid resource ID format." });
+
+  const result = await db
+    .collection("resources")
+    .deleteOne({ _id: new ObjectId(resourceId) });
+  if (result.deletedCount === 0)
+    return res
+      .status(200)
+      .json({ message: "Resource not found, nothing deleted." });
+
+  res.status(200).json({ message: "Resource deleted from main collection." });
+});
+
 module.exports = router;

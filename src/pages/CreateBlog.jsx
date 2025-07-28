@@ -1,7 +1,7 @@
 // src/pages/CreateBlog.jsx
 import { useEditor, EditorContent } from "@tiptap/react";
+import { useState, useEffect } from "react";
 import StarterKit from "@tiptap/starter-kit";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./page_styles/CreateBlog.module.css";
 
@@ -15,6 +15,17 @@ export default function CreateBlog() {
     extensions: [StarterKit],
     content: "<p>Start writing your blog here...</p>",
   });
+
+  const [_, setEditorState] = useState(0); // dummy state for forcing updates
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const updateListener = () => setEditorState((n) => n + 1);
+
+    editor.on("transaction", updateListener);
+    return () => editor.off("transaction", updateListener);
+  }, [editor]);
 
   const handleSubmit = async () => {
     if (!title || !editor) return;
@@ -82,21 +93,39 @@ export default function CreateBlog() {
         // - `run()` executes the full chain
         // The optional chaining (`editor?.`) safely checks that the editor is initialized
         */}
-        <button onClick={() => editor?.chain().focus().toggleBold().run()}>
+        <button
+          className={`${styles.toolbarButton} ${
+            editor?.isActive("bold") ? styles.activeButton : ""
+          }`}
+          onClick={() => editor?.chain().focus().toggleBold().run()}
+        >
           <b>B</b>
         </button>
-        <button onClick={() => editor?.chain().focus().toggleItalic().run()}>
+        <button
+          onClick={() => editor?.chain().focus().toggleItalic().run()}
+          className={`${styles.toolbarButton} ${
+            editor?.isActive("italic") ? styles.activeButton : ""
+          }`}
+        >
           <i>I</i>
         </button>
+
         <button
           onClick={() =>
             editor?.chain().focus().toggleHeading({ level: 1 }).run()
           }
+          className={`${styles.toolbarButton} ${
+            editor?.isActive("heading", { level: 1 }) ? styles.activeButton : ""
+          }`}
         >
           H1
         </button>
+
         <button
           onClick={() => editor?.chain().focus().toggleBulletList().run()}
+          className={`${styles.toolbarButton} ${
+            editor?.isActive("bulletList") ? styles.activeButton : ""
+          }`}
         >
           • List
         </button>

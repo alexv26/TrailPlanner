@@ -39,3 +39,16 @@
 .bodyText h1 {
   font-size: 2.5rem;
 }
+
+.deleteButtonWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.deleteButton {
+  background-color: red;
+  color: var(--color-tile-text);
+  padding: 10px;
+  border-radius: 8px;
+}
