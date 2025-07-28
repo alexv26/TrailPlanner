@@ -6,10 +6,10 @@ import formFields from "../resources/formFields.json";
 
 export default function TripDetails() {
   const location = useLocation();
-  const { from } = location.state || {};
+  const { inTrip, from } = location.state || {};
   const { id } = useParams();
   const navigate = useNavigate();
-  const [trip, setTrip] = useState(null);
+  const [trip, setTrip] = useState(inTrip || null);
 
   const handleCopyPlan = () => {
     const { startDate, endDate, ...updatedTripForCopying } = trip;
@@ -38,15 +38,17 @@ export default function TripDetails() {
   }
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/trips/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setTrip(data);
-      })
-      .catch((err) => {
-        console.error("Failed to load trip details:", err);
-      });
-  }, [id]);
+    if (!inTrip && id) {
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/trips/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setTrip(data);
+        })
+        .catch((err) => {
+          console.error("Failed to load trip details:", err);
+        });
+    }
+  }, [inTrip, id]);
 
   if (!trip) {
     return <div>Loading...</div>;

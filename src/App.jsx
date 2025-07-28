@@ -63,7 +63,7 @@ function App() {
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/mealplans" element={<MealPlans />}></Route>
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
-          <Route path="/viewplan/:id" element={<TripDetails />}></Route>
+          <Route path="/viewplan/:id?" element={<TripDetails />}></Route>
           <Route path="/createblog" element={<CreateBlog />}></Route>
           <Route path="/blog/:blogId" element={<ViewBlog />}></Route>
           <Route

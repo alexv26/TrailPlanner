@@ -5,19 +5,7 @@ import objectId from "bson-objectid";
 import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
-const showMockButton = true;
-
-const emergencyContactPlaceholder =
-  "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842";
-const mealPlanPlaceholder =
-  "e.g.\nLunch:\n1.5lb Turkey\n1lb american cheese\nPringles\n\nDinner:\nPasta\nRed Sauce\nPesto";
-
-const weatherContingencyPlaceholder =
-  "Insert contingency plan for unsatisfactory/unsafe weather here";
-const injuryContingencyPlaceholder = "Insert contingency plan for injury here";
-const lateReturnProtocolPlaceholder = "Insert plan for late return here";
-const alternativeRoutePlaceholder =
-  "Insert possible alternative routes here. This can be an alltrails link with a brief description.";
+const showMockButton = false;
 
 const mockFormData = {
   tripName: "Day Hike to Mount Lafayette",
@@ -479,7 +467,9 @@ export default function CreatePlan() {
 
       // Step 3: Redirect to /viewplan/:id
       if (successful) {
-        navigate(`/viewplan/${generatedId.toString()}`);
+        navigate(`/viewplan`, {
+          state: { inTrip: updatedFormData, from: "/" },
+        });
       }
     } catch (error) {
       console.error("❌ Error saving to user profile:", error);
@@ -487,6 +477,7 @@ export default function CreatePlan() {
     }
   };
 
+  // TODO: Implement APIs
   useEffect(() => {
     const name = formData.trailhead;
     if (page !== 4 || !name || name.length < 3 || formData.trailheadAddress)
@@ -516,7 +507,7 @@ export default function CreatePlan() {
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.header}>
-        {formFields[page]?.header || "Create a Trip Plan"}
+        {page != finalPage ? formFields[page]?.header : "Before you Submit..."}
       </h1>
       {showMockButton && (
         <button
@@ -595,6 +586,13 @@ export default function CreatePlan() {
 
         {page === finalPage && (
           <div className={styles.publishSection}>
+            <p>
+              Thank you for filling out your trip plan! To view your plan,
+              please press submit. If you would be willing to share your plan
+              with others, please click on the checkbox to publish the plan.
+              This plan can be accessed from your profile, and can be deleted
+              from your profile and the public database at any point.
+            </p>
             <label className={styles.checkboxLabel}>
               <input
                 type="checkbox"
@@ -603,6 +601,15 @@ export default function CreatePlan() {
               />
               Publish this trip plan to the public database
             </label>
+            <p
+              style={{
+                color: "yellow",
+                fontWeight: "bold",
+              }}
+            >
+              Note: names and emergency contact info is removed if you chose to
+              share your trip plan.
+            </p>
           </div>
         )}
         <div className={styles.formNavigation}>

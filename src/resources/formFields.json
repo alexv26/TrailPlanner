@@ -42,7 +42,7 @@
       "label": "Leader Emergency Contact Info",
       "type": "textarea",
       "rows": 2,
-      "placeholder": "emergencyContactPlaceholder",
+      "placeholder": "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842",
       "required": true
     },
     "permits": {
@@ -156,7 +156,7 @@
       "label": "Meal Plan",
       "type": "textarea",
       "rows": 10,
-      "placeholder": "mealPlanPlaceholder"
+      "placeholder": "Lunch:\n1.5lb Turkey\n1lb american cheese\nPringles\n\nDinner:\nPasta\nRed Sauce\nPesto"
     }
   },
   "7": {
@@ -165,24 +165,24 @@
       "label": "Weather Contingency Plan",
       "type": "textarea",
       "rows": 3,
-      "placeholder": "weatherContingencyPlaceholder"
+      "placeholder": "Take the Solid Ground trail, located at ____ as it is less slippery. Make sure to bring rain jackets."
     },
     "injuryPlan": {
       "label": "Injury Contingency Plan",
       "type": "textarea",
       "rows": 3,
-      "placeholder": "injuryContingencyPlaceholder"
+      "placeholder": "Provide all necessary first aid. If need be, evacuate off the Injury Evacuation Point trail to safety and call for help if necessary."
     },
     "lateReturn": {
       "label": "Late Return Protocol",
       "type": "textarea",
       "rows": 3,
-      "placeholder": "lateReturnProtocolPlaceholder"
+      "placeholder": "Stop overnight at the Overnight Campsite and return the following morning. Provide games to keep participants happy."
     },
     "altRoute": {
       "label": "Alternative Route",
       "type": "text",
-      "placeholder": "alternativeRoutePlaceholder"
+      "placeholder": "Take the less difficult trail if participants arent prepared."
     }
   }
 }
