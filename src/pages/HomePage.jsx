@@ -1,4 +1,5 @@
 import styles from "./page_styles/HomePage.module.css";
+const publicUrl = import.meta.env.BASE_URL;
 
 function HomePage() {
   return (
@@ -6,7 +7,7 @@ function HomePage() {
       <div className={styles.container}>
         <div className={styles.hero}>
           <video
-            src={"https://files.catbox.moe/gw7j3s.mov"}
+            src={`${publicUrl}assets/video-bkgnd.mov`}
             muted
             autoPlay
             loop
