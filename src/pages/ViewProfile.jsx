@@ -5,8 +5,6 @@ import { useAuth } from "../components/AuthProvider";
 import ProfileTile from "../components/ProfileTile.jsx";
 import TripGallery from "../components/TripGallery.jsx";
 
-import editButton from "../assets/edit-button.png";
-
 export default function ViewProfile() {
   const navigate = useNavigate();
   const { user } = useAuth();

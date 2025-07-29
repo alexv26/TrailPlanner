@@ -1,6 +1,5 @@
 import styles from "./page_styles/About.module.css";
-import canyon from "../assets/canyon.jpg";
-import alex from "../assets/alex.jpg";
+const publicUrl = import.meta.env.BASE_URL;
 
 function AboutTile({ imgSrc, header, body, imgSide }) {
   const tileClass =
@@ -25,13 +24,13 @@ export default function About() {
   return (
     <div className={styles.container}>
       <AboutTile
-        imgSrc={canyon}
+        imgSrc={`${publicUrl}assets/canyon.jpg`}
         header="About This Site"
         body={`Planning for hikes has never been made easier. With TrailPlanner, you no longer have to feel unprepared for whatever adventures you partake in. TrailPlanner is a tool designed to make organizing outdoor trips easier, safer, and more collaborative. Whether you're a seasoned trip leader or planning your first hike, this site helps you create comprehensive trip plans by filling out a simple form — no more starting from scratch every time. TrailPlanner aims to remove the burden of completing repetitive tasks in trip planning, such as meal planning, locating nearest hospitals, parking lots, and more, through the assistance of various APIs and artificial intelligence. \n In addition to planning, TrailPlanner includes a trip history feature. You can browse past trip records by location, letting you learn from previous groups — what to expect on the trail, what worked well, and what could be improved. It's all about building a smarter, safer outdoor community.`}
         imgSide="left"
       />
       <AboutTile
-        imgSrc={alex}
+        imgSrc={`${publicUrl}assets/alex.jpg`}
         header="About The Creator"
         body="This project was created by Alexander Velsmid, a student and outdoor enthusiast who has led and organized outdoor trips through Outdoor Adventures at Boston College for three years. After recognizing how repetitive and inconsistent trip planning could be — especially on informal or non-organization-led outings — Alex built TrailPlanner to simplify the process and make it easier for leaders to create thorough, reusable plans while sharing insights across trips and teams."
         imgSide="right"

@@ -2,6 +2,7 @@
 .editorPage {
   max-width: 800px;
   margin: auto;
+  margin-top: 80px;
   padding: 20px;
   background-color: var(--color-tile-background);
   color: var(--color-tile-text);
@@ -47,6 +48,9 @@
 
 .toolbarButton {
   background-color: white;
+  align-items: center;
+  width: 30px;
+  padding: 5px;
   color: black;
   border: none;
   margin-left: 5px;
@@ -59,6 +63,11 @@
     --color-button-background
   ); /* A darker blue for active state */
   color: white;
+}
+
+.toolbar img {
+  width: 15px;
+  height: auto;
 }
 
 .editorContainer {
