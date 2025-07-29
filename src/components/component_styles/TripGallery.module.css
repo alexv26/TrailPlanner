@@ -13,12 +13,13 @@
   box-shadow: var(--shadow-elevated);
   border: #e6f0ff;
   color: var(--color-tile-text);
-  padding: 1rem;
+  padding: 1.4rem;
   border-radius: 8px;
   width: 250px;
   cursor: pointer;
   transition: 0.2s ease;
   height: auto;
+  min-height: 350px;
 }
 
 .tripTile strong {
@@ -154,4 +155,12 @@
   font-size: 16px;
   border-radius: 6px;
   border: 1px solid #ccc;
+}
+
+.tripTile h3 {
+  font-size: 1.5rem;
+}
+
+.tripTile p {
+  font-size: 1rem;
 }

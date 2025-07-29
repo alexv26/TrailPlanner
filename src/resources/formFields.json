@@ -1,0 +1,188 @@
+{
+  "1": {
+    "header": "Create a Trip Plan",
+    "tripName": {
+      "label": "Trip Name",
+      "type": "text",
+      "placeholder": "Day Trip to Mt. Lafayette",
+      "required": true
+    },
+    "location": {
+      "label": "General Trip Location",
+      "type": "text",
+      "placeholder": "Franconia, NH",
+      "required": true
+    },
+    "leaders": {
+      "label": "Trip Leaders",
+      "type": "text",
+      "placeholder": "Alex Velsmid and Thomas Gregory",
+      "required": true
+    },
+    "startDate": {
+      "label": "Start Date",
+      "type": "date",
+      "required": true
+    },
+    "endDate": {
+      "label": "End Date",
+      "type": "date",
+      "required": true
+    }
+  },
+  "2": {
+    "header": "Group and Logistic Info",
+    "groupSize": {
+      "label": "Number of participants",
+      "type": "number",
+      "placeholder": "7",
+      "required": true
+    },
+    "emergencyContact": {
+      "label": "Leader Emergency Contact Info",
+      "type": "textarea",
+      "rows": 2,
+      "placeholder": "Alexander Velsmid: 123-274-2927 \nThomas Gregory: 198-384-2842",
+      "required": true
+    },
+    "permits": {
+      "label": "Permits or Parking Passes",
+      "type": "text",
+      "placeholder": "Insert either permits required and price or N/A"
+    }
+  },
+  "3": {
+    "header": "Overnight Logistics",
+    "campsiteName": {
+      "label": "Campsite Name",
+      "type": "text",
+      "placeholder": "Enter campsite name and link",
+      "required": true
+    },
+    "campsiteAddress": {
+      "label": "Campsite Address",
+      "type": "textarea",
+      "placeholder": "Enter address of the campsite, including driving instructions if necessary",
+      "required": true
+    },
+    "campsitePrice": {
+      "label": "Campsite Price",
+      "type": "text",
+      "placeholder": "Enter cost of campsite",
+      "required": true
+    },
+    "campsiteHasBathrooms": {
+      "label": "Campsite has bathroom access",
+      "type": "checkbox",
+      "checked": false
+    }
+  },
+  "4": {
+    "header": "Activity Information",
+    "allTrailsLink": {
+      "label": "AllTrails Link",
+      "type": "text",
+      "placeholder": "https://www.alltrails.com/trail/us/new-hampshire/mount-lafayette"
+    },
+    "trailhead": {
+      "label": "Trailhead Name",
+      "type": "text",
+      "placeholder": "Falling Waters Trailhead",
+      "required": true
+    },
+    "trailheadAddress": {
+      "label": "Trailhead Address",
+      "type": "textarea",
+      "placeholder": "123 Trailhead Rd, Franconia, NH",
+      "required": true
+    },
+    "distanceGain": {
+      "label": "Distance (mi)",
+      "type": "text",
+      "placeholder": "7.5 mi"
+    },
+    "elevationGain": {
+      "label": "Elevation Gain (ft)",
+      "type": "text",
+      "placeholder": "3500 ft"
+    },
+    "activityTime": {
+      "label": "Estimated Activity Time",
+      "type": "text",
+      "placeholder": "7 hrs.",
+      "required": true
+    },
+    "difficulty": {
+      "label": "Difficulty",
+      "type": "select",
+      "options": ["Easy", "Moderate", "Hard", "Very Hard", "Extreme"],
+      "required": true
+    },
+    "topoMap": {
+      "label": "Link to a Map",
+      "type": "text",
+      "placeholder": "https://www.example.com/topo-map"
+    }
+  },
+  "5": {
+    "header": "Scheduling Logistics",
+    "departure": {
+      "label": "Departure Time & Place",
+      "type": "text",
+      "placeholder": "7:00 AM from the Outdoor Adventures office",
+      "required": true
+    },
+    "returnTime": {
+      "label": "Estimated Return Time",
+      "type": "text",
+      "placeholder": "5:30 PM",
+      "required": true
+    },
+    "mealBreaks": {
+      "label": "Meal Breaks",
+      "type": "text",
+      "placeholder": "Lunch at the summit around 12:30 PM; snack break at Greenleaf Hut",
+      "required": true
+    },
+    "backupExit": {
+      "label": "Backup Exit Points",
+      "type": "text",
+      "placeholder": "Exit off the falling water trail before the ridge, ~1.5 miles from trialhead"
+    }
+  },
+  "6": {
+    "header": "Meal Plan",
+    "mealPlan": {
+      "label": "Meal Plan",
+      "type": "textarea",
+      "rows": 10,
+      "placeholder": "Lunch:\n1.5lb Turkey\n1lb american cheese\nPringles\n\nDinner:\nPasta\nRed Sauce\nPesto"
+    }
+  },
+  "7": {
+    "header": "Safety & Emergency Plan",
+    "weatherPlan": {
+      "label": "Weather Contingency Plan",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "Take the Solid Ground trail, located at ____ as it is less slippery. Make sure to bring rain jackets."
+    },
+    "injuryPlan": {
+      "label": "Injury Contingency Plan",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "Provide all necessary first aid. If need be, evacuate off the Injury Evacuation Point trail to safety and call for help if necessary."
+    },
+    "lateReturn": {
+      "label": "Late Return Protocol",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "Stop overnight at the Overnight Campsite and return the following morning. Provide games to keep participants happy."
+    },
+    "altRoute": {
+      "label": "Alternative Route",
+      "type": "text",
+      "placeholder": "Take the less difficult trail if participants arent prepared."
+    }
+  }
+}

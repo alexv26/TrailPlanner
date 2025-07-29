@@ -23,6 +23,25 @@ router.get("/", async (req, res) => {
   res.json(trips);
 });
 
+// Get trip by ID
+router.get("/:id", async (req, res) => {
+  const db = await getDb();
+  const tripId = req.params.id;
+
+  if (!ObjectId.isValid(tripId)) {
+    return res.status(400).json({ message: "Invalid trip ID format." });
+  }
+
+  const trip = await db
+    .collection("trips")
+    .findOne({ _id: new ObjectId(tripId) });
+  if (!trip) {
+    return res.status(404).json({ message: "Trip not found." });
+  }
+
+  res.json(trip);
+});
+
 // Delete trip
 router.delete("/:id/delete", async (req, res) => {
   const db = await getDb();

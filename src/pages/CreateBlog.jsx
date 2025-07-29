@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import { useNavigate } from "react-router-dom";
 import styles from "./page_styles/CreateBlog.module.css";
+const publicUrl = import.meta.env.BASE_URL;
 
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
@@ -127,7 +128,7 @@ export default function CreateBlog() {
             editor?.isActive("bulletList") ? styles.activeButton : ""
           }`}
         >
-          • List
+          <img src={`${publicUrl}/list.png`} />
         </button>
       </div>
 

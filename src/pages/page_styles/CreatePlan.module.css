@@ -123,6 +123,21 @@
   font-size: 1rem;
 }
 
+/* Wrap checkbox and label inline */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .formContainer {
@@ -134,4 +149,22 @@
     flex-direction: column;
     gap: 10px;
   }
+}
+
+.resultContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  width: 100%;
+  height: 100%;
+}
+
+.required {
+  color: red;
+  font-size: 0.8rem;
+  padding: 4px;
+}
+
+.publishSection p {
+  line-height: 1.5rem;
 }

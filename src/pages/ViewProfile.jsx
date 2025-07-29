@@ -5,8 +5,6 @@ import { useAuth } from "../components/AuthProvider";
 import ProfileTile from "../components/ProfileTile.jsx";
 import TripGallery from "../components/TripGallery.jsx";
 
-import editButton from "../assets/edit-button.png";
-
 export default function ViewProfile() {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -26,7 +24,9 @@ export default function ViewProfile() {
 
   useEffect(() => {
     if (user?.username) {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${user.username}`)
+      fetch(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/${user.username}/trips`
+      )
         .then((res) => res.json())
         .then((data) => {
           setTrips(data.trips || []);

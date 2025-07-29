@@ -10,7 +10,7 @@ export default function ExplorePastTrips() {
   const [searchQuery, setSearchQuery] = useState("");
   // Dynamic tilesPerPage
   const [tilesPerPage, setTilesPerPage] = useState(() => {
-    const tileWidth = 290;
+    const tileWidth = 250;
     const windowSize = window.innerWidth;
     console.log("Window size:", windowSize);
     console.log("Tiles per page:", Math.floor(windowSize / tileWidth) * 2);
@@ -79,7 +79,7 @@ export default function ExplorePastTrips() {
   }
 
   return (
-    <>
+    <div className={styles.container}>
       {searchBarVisible && (
         <div className={styles.searchBar}>
           <h1>Search Trips</h1>
@@ -119,6 +119,6 @@ export default function ExplorePastTrips() {
           </a>
         </div>
       )}
-    </>
+    </div>
   );
 }

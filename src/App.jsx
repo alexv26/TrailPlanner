@@ -45,7 +45,10 @@ function App() {
       <RouteWatcher />
       <div className="background-color" />
       <div className="main-content">
-        <NavigationBar />
+        <div className="navigation-wrapper">
+          <NavigationBar />
+        </div>
+
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<About />} />
@@ -60,7 +63,7 @@ function App() {
           <Route path="/resources" element={<Resources />}></Route>
           <Route path="/mealplans" element={<MealPlans />}></Route>
           <Route path="/explore" element={<ExplorePastTrips />}></Route>
-          <Route path="/trip" element={<TripDetails />}></Route>
+          <Route path="/viewplan/:id?" element={<TripDetails />}></Route>
           <Route path="/createblog" element={<CreateBlog />}></Route>
           <Route path="/blog/:blogId" element={<ViewBlog />}></Route>
           <Route

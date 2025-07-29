@@ -3,10 +3,10 @@ require("dotenv").config();
 const fetch = (...args) =>
   import("node-fetch").then(({ default: fetch }) => fetch(...args));
 
-const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@trailplanner.5yofcdg.mongodb.net/?retryWrites=true&w=majority&appName=TrailPlanner`; // your MongoDB connection string
+const MONGO_URI = `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@trailplanner.5yofcdg.mongodb.net/?retryWrites=true&w=majority&appName=TrailPlanner`;
+
 const DB_NAME = "trailplanner";
 const COLLECTION_NAME = "trips";
-const PIXABAY_API_KEY = process.env.VITE_PIXABAY_API_KEY;
 
 const getRandomInteger = (min, max) => {
   min = Math.ceil(min);
@@ -32,7 +32,7 @@ async function updateAllTrips() {
     for await (const trip of cursor) {
       if (!trip.tripName) continue;
 
-      const imgUrl = `src/assets/outdoor_photos/${assignImage()}`;
+      const imgUrl = `/assets/outdoor_photos/${assignImage()}`;
       if (!imgUrl) {
         console.log(`No image found for: ${trip.tripName}`);
         continue;
