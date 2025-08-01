@@ -1,0 +1,103 @@
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 140px;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0.5rem;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 140px;
+  background-color: #ccc;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.bodyText {
+  padding: 0.2rem 0.7rem;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  background-color: rgba(255, 0, 0, 0.7); /* semi-transparent red */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  pointer-events: none; /* allows clicks to pass through */
+}
+
+.deleteConfirmButtons {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.noButton {
+  background-color: grey;
+}
+
+.yesButton {
+  background-color: red;
+}
+
+.noButton,
+.yesButton {
+  padding: 5px;
+  width: 50px;
+  border: none;
+  border-radius: 5px;
+}
+
+.tripTile {
+  background-color: var(--color-tile-background);
+  box-shadow: var(--shadow-elevated);
+  border: #e6f0ff;
+  color: var(--color-tile-text);
+  border-radius: 8px;
+  width: 250px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  height: auto;
+  min-height: 280px;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tripTile h3 {
+  font-size: 1.2rem;
+  padding-bottom: 10px;
+  padding-top: 5px;
+}
+
+.tripTile p {
+  font-size: 1rem;
+}
+
+.tripTile strong {
+  color: var(--color-tile-text);
+  font-weight: 900;
+}

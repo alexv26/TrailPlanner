@@ -74,15 +74,13 @@
   border: 1px solid var(--color-navbar-background);
   border-radius: 8px;
   min-height: 300px;
-  padding: 10px;
+  padding: 10px 30px;
   background-color: var(--color-tile-background);
 }
 
 /* Editor styles */
 .editorContainer :global(.ProseMirror) {
-  background-color: var(--color-tile-background);
   color: var(--color-tile-text);
-  padding-bottom: 10px;
 }
 
 .submitButton {

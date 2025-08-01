@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import styles from "./page_styles/CreatePlan.module.css";
 
 const showMockButton = false;
+const publicUrl = import.meta.env.BASE_URL;
 
 const mockFormData = {
   tripName: "Day Hike to Mount Lafayette",
@@ -404,7 +405,7 @@ export default function CreatePlan() {
     e.preventDefault();
     setPage((prev) => prev + 1);
 
-    const imgUrl = `src/assets/outdoor_photos/${assignImage()}`; // future: allow user upload
+    const imgUrl = `${publicUrl}assets/outdoor_photos/${assignImage()}`; // future: allow user upload
     const { _id, ...rest } = formData;
     const generatedId = objectId(); // pre-generating a shared ID
 
@@ -586,7 +587,7 @@ export default function CreatePlan() {
 
         {page === finalPage && (
           <div className={styles.publishSection}>
-            <p>
+            <p style={{ margin: "2rem 0" }}>
               Thank you for filling out your trip plan! To view your plan,
               please press submit. If you would be willing to share your plan
               with others, please click on the checkbox to publish the plan.

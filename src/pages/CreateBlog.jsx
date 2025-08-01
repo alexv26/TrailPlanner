@@ -128,7 +128,7 @@ export default function CreateBlog() {
             editor?.isActive("bulletList") ? styles.activeButton : ""
           }`}
         >
-          <img src={`${publicUrl}/list.png`} />
+          <img src={`${publicUrl}assets/list.png`} />
         </button>
       </div>
 

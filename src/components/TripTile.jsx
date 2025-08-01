@@ -1,5 +1,6 @@
 // TripTile.jsx
-import styles from "./component_styles/TripGallery.module.css";
+import styles from "./component_styles/TripTile.module.css";
+import { motion, MotionConfig } from "motion/react";
 
 export default function TripTile({
   trip,
@@ -17,45 +18,53 @@ export default function TripTile({
   };
 
   return (
-    <div
-      className={styles.tripTile}
-      onClick={!confirming ? onClick : undefined}
+    <MotionConfig
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.125, ease: "easeInOut" }}
     >
-      {trip.placeholderImg ? (
-        <div className={styles.imageWrapper}>
-          <img src={trip.placeholderImg} alt={trip.tripName} />
-          {deleteMode && <div className={styles.overlay}>x</div>}
-        </div>
-      ) : (
-        <div className={styles.imagePlaceholder}>No image available</div>
-      )}
-      {confirming && deleteMode ? (
-        <>
-          <h3>Are you sure you want to delete this trip?</h3>
-          <div className={styles.deleteConfirmButtons}>
-            <button onClick={onCancelConfirm} className={styles.noButton}>
-              No
-            </button>
-            <button onClick={onClick} className={styles.yesButton}>
-              Yes
-            </button>
+      <motion.div
+        className={styles.tripTile}
+        onClick={!confirming ? onClick : undefined}
+      >
+        {trip.placeholderImg ? (
+          <div className={styles.imageWrapper}>
+            <img src={trip.placeholderImg} alt={trip.tripName} />
+            {deleteMode && <div className={styles.overlay}>x</div>}
           </div>
-        </>
-      ) : (
-        <>
-          <h3 className={styles.truncate}>{trip.tripName}</h3>
-          <p>
-            <strong>Location:</strong> {trip.location}
-          </p>
-          <p>
-            <strong>Difficulty:</strong> {trip.difficulty}
-          </p>
-          <p>
-            <strong>Tip Length: </strong>
-            {calculateTripLength(trip.startDate, trip.endDate)}
-          </p>
-        </>
-      )}
-    </div>
+        ) : (
+          <div className={styles.imagePlaceholder}>No image available</div>
+        )}
+        <div className={styles.bodyText}>
+          {confirming && deleteMode ? (
+            <>
+              <h3>Are you sure you want to delete this trip?</h3>
+              <div className={styles.deleteConfirmButtons}>
+                <button onClick={onCancelConfirm} className={styles.noButton}>
+                  No
+                </button>
+                <button onClick={onClick} className={styles.yesButton}>
+                  Yes
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3 className={styles.truncate}>{trip.tripName}</h3>
+              <p className={styles.truncate}>
+                <strong>Location:</strong> {trip.location}
+              </p>
+              <p className={styles.truncate}>
+                <strong>Difficulty:</strong> {trip.difficulty}
+              </p>
+              <p className={styles.truncate}>
+                <strong>Tip Length: </strong>
+                {calculateTripLength(trip.startDate, trip.endDate)}
+              </p>
+            </>
+          )}
+        </div>
+      </motion.div>
+    </MotionConfig>
   );
 }

@@ -18,7 +18,9 @@ export default function TripGallery({
   const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
 
-  const totalPages = Math.ceil(trips.length / pageSize);
+  const [totalPages, setTotalPages] = useState(
+    Math.ceil(trips.length / pageSize)
+  );
   const currentTrips = trips.slice((page - 1) * pageSize, page * pageSize);
 
   const [confirmingTripId, setConfirmingTripId] = useState(null);
@@ -119,12 +121,15 @@ export default function TripGallery({
   };
 
   useEffect(() => {
-    if (page != 1) {
-      localStorage.setItem("showTripGallerySearchBar", false);
-    } else {
-      localStorage.setItem("showTripGallerySearchBar", true);
+    const newTotal = Math.ceil(trips.length / pageSize);
+    setTotalPages(newTotal);
+
+    if (newTotal === 0) {
+      setPage(1);
+    } else if (page > newTotal) {
+      setPage(newTotal);
     }
-  }, [page]);
+  }, [trips.length, pageSize, page]);
 
   return (
     <div>
