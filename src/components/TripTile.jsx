@@ -23,11 +23,7 @@ export default function TripTile({
     >
       {trip.placeholderImg ? (
         <div className={styles.imageWrapper}>
-          <img
-            src={trip.placeholderImg}
-            alt={trip.tripName}
-            className={styles.tileImage}
-          />
+          <img src={trip.placeholderImg} alt={trip.tripName} />
           {deleteMode && <div className={styles.overlay}>x</div>}
         </div>
       ) : (
@@ -47,7 +43,7 @@ export default function TripTile({
         </>
       ) : (
         <>
-          <h3>{trip.tripName}</h3>
+          <h3 className={styles.truncate}>{trip.tripName}</h3>
           <p>
             <strong>Location:</strong> {trip.location}
           </p>

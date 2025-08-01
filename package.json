@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"node src/server/server.cjs\" ",
-    "devlocal": "vite",
+    "devnoserver": "vite",
     "start": "node src/server/server.cjs",
     "build": "vite build",
     "lint": "eslint .",
