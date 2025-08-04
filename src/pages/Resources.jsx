@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./page_styles/Resources.module.css";
-import ResourceLinkTile from "../components/ResourceLinkTile";
+import Blog from "../components/Blog";
 import { useAuth } from "../components//AuthProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +35,7 @@ export default function Resources() {
         )}
         <div className={styles.tiles}>
           {resources.map((resource, index) => (
-            <ResourceLinkTile
+            <Blog
               key={index}
               title={resource.title}
               bodyText={resource.shortDescription}

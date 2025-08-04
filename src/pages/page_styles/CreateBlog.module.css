@@ -31,13 +31,34 @@
   border: none;
 }
 
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
 .smallerInput {
   width: 100%;
   border: 1px solid var(--color-navbar-background);
   font-size: 1rem;
   margin-bottom: 10px;
   padding: 10px;
-  border: none;
+  padding-right: 60px; /* make room for counter */
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: var(--color-tile-background);
+  color: var(--color-tile-text);
+}
+
+.counter {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-90%);
+  font-size: 0.8rem;
+  pointer-events: none;
+  color: var(--color-tile-text);
+  user-select: none;
+  color: grey;
 }
 
 .toolbar {
@@ -74,13 +95,56 @@
   border: 1px solid var(--color-navbar-background);
   border-radius: 8px;
   min-height: 300px;
-  padding: 10px 30px;
+  padding: 10px;
   background-color: var(--color-tile-background);
 }
 
 /* Editor styles */
 .editorContainer :global(.ProseMirror) {
   color: var(--color-tile-text);
+  padding: 10px;
+  caret-color: var(--color-tile-text); /* ensures the cursor is visible */
+  outline: none;
+  min-height: 200px;
+  line-height: 1.5;
+}
+
+/* ensure focus styling doesn’t suppress the cursor */
+.editorContainer :global(.ProseMirror:focus) {
+  outline: none;
+}
+
+/* keep bullets/numbers properly aligned */
+.editorContainer :global(.ProseMirror ul),
+.editorContainer :global(.ProseMirror ol) {
+  padding-left: 1.5rem; /* indent so markers are visible */
+  margin: 0 0 1rem; /* reasonable spacing */
+  list-style-position: outside; /* marker lives outside but aligned */
+}
+
+/* list items spacing & line height to keep marker and text on same line */
+.editorContainer :global(.ProseMirror li) {
+  margin: 0.25rem 0;
+  line-height: 1.4;
+  display: list-item; /* ensure default behavior */
+}
+
+.editorContainer :global(.ProseMirror) {
+  position: relative;
+  padding: 10px;
+  caret-color: var(--color-tile-text);
+  min-height: 200px;
+  line-height: 1.5;
+  color: var(--color-tile-text);
+  outline: none;
+}
+
+.editorContainer :global(p:first-child.is-empty[data-placeholder]::before) {
+  content: attr(data-placeholder);
+  color: grey;
+  opacity: 0.6;
+  pointer-events: none;
+  position: absolute;
 }
 
 .submitButton {

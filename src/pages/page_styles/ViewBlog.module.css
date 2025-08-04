@@ -2,15 +2,16 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  background-color: var(--color-tile-background);
   color: var(--color-tile-text);
   padding: 20px;
   border-radius: 8px;
 }
 
 .header {
-  padding: 0 20px;
-  background-color: var(--color-navbar-background);
+  padding: 0 20px 20px 20px;
+  /* float effect */
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15),
+    0 8px 20px -5px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 
@@ -51,4 +52,18 @@
   color: var(--color-tile-text);
   padding: 10px;
   border-radius: 8px;
+}
+
+/* List item fix */
+ul,
+ol {
+  padding-left: 1.5rem; /* indent so markers are visible */
+  margin: 0 0 1rem; /* reasonable spacing */
+  list-style-position: outside; /* marker lives outside but aligned */
+}
+
+li {
+  margin: 0.25rem 0;
+  line-height: 1.4;
+  display: list-item; /* ensure default behavior */
 }

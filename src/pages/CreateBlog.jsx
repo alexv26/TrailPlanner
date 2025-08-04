@@ -1,10 +1,40 @@
 // src/pages/CreateBlog.jsx
 import { useEditor, EditorContent } from "@tiptap/react";
+import { Placeholder } from "@tiptap/extensions";
 import { useState, useEffect } from "react";
 import StarterKit from "@tiptap/starter-kit";
 import { useNavigate } from "react-router-dom";
 import styles from "./page_styles/CreateBlog.module.css";
 const publicUrl = import.meta.env.BASE_URL;
+
+function ShortDescriptionInput({
+  shortDescription,
+  setShortDescription,
+  maxChars = 200,
+}) {
+  const handleChange = (e) => {
+    // optional: enforce manually (useful if you want to strip pasting overlimit)
+    const val = e.target.value.slice(0, maxChars);
+    setShortDescription(val);
+  };
+
+  return (
+    <div className={styles.inputWrapper}>
+      <input
+        type="text"
+        placeholder="Enter short description"
+        className={styles.smallerInput}
+        value={shortDescription}
+        onChange={handleChange}
+        maxLength={maxChars}
+        aria-describedby="desc-counter"
+      />
+      <div className={styles.counter} id="desc-counter" aria-live="polite">
+        {shortDescription.length}/{maxChars}
+      </div>
+    </div>
+  );
+}
 
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
@@ -13,8 +43,14 @@ export default function CreateBlog() {
   const navigate = useNavigate();
 
   const editor = useEditor({
-    extensions: [StarterKit],
-    content: "<p>Start writing your blog here...</p>",
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Begin writing here...",
+        showOnlyWhenEditable: true,
+      }),
+    ],
+    content: "",
   });
 
   const [_, setEditorState] = useState(0); // dummy state for forcing updates
@@ -62,31 +98,30 @@ export default function CreateBlog() {
   };
 
   return (
-    <div className={styles.editorPage}>
-      <h1>Make a Blog Post</h1>
-      <input
-        type="text"
-        placeholder="Enter blog title"
-        className={styles.titleInput}
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Enter short description"
-        className={styles.smallerInput}
-        value={shortDescription}
-        onChange={(e) => setShortDescription(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Enter an img link (optional)"
-        className={styles.smallerInput}
-        value={imgLink}
-        onChange={(e) => setImgLink(e.target.value)}
-      />
-      <div className={styles.toolbar}>
-        {/* 
+    <div className={styles.createBlogWrapper}>
+      <div className={styles.editorPage}>
+        <h1>Make a Blog Post</h1>
+        <input
+          type="text"
+          placeholder="Enter blog title"
+          className={styles.titleInput}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <ShortDescriptionInput
+          shortDescription={shortDescription}
+          setShortDescription={setShortDescription}
+          maxChars={300}
+        />
+        <input
+          type="text"
+          placeholder="Enter an img link (optional)"
+          className={styles.smallerInput}
+          value={imgLink}
+          onChange={(e) => setImgLink(e.target.value)}
+        />
+        <div className={styles.toolbar}>
+          {/* 
         // When clicked, this button executes a TipTap command chain:
         // - `chain()` starts a sequence of editor commands
         // - `focus()` ensures the editor is focused (needed before applying formatting)
@@ -94,51 +129,75 @@ export default function CreateBlog() {
         // - `run()` executes the full chain
         // The optional chaining (`editor?.`) safely checks that the editor is initialized
         */}
-        <button
-          className={`${styles.toolbarButton} ${
-            editor?.isActive("bold") ? styles.activeButton : ""
-          }`}
-          onClick={() => editor?.chain().focus().toggleBold().run()}
-        >
-          <b>B</b>
-        </button>
-        <button
-          onClick={() => editor?.chain().focus().toggleItalic().run()}
-          className={`${styles.toolbarButton} ${
-            editor?.isActive("italic") ? styles.activeButton : ""
-          }`}
-        >
-          <i>I</i>
-        </button>
+          <button
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("bold") ? styles.activeButton : ""
+            }`}
+            onClick={() => editor?.chain().focus().toggleBold().run()}
+          >
+            <b>B</b>
+          </button>
+          <button
+            onClick={() => editor?.chain().focus().toggleItalic().run()}
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("italic") ? styles.activeButton : ""
+            }`}
+          >
+            <i>I</i>
+          </button>
+          <button
+            onClick={() => editor?.chain().focus().toggleUnderline().run()}
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("underline") ? styles.activeButton : ""
+            }`}
+          >
+            <u>U</u>
+          </button>
 
-        <button
-          onClick={() =>
-            editor?.chain().focus().toggleHeading({ level: 1 }).run()
-          }
-          className={`${styles.toolbarButton} ${
-            editor?.isActive("heading", { level: 1 }) ? styles.activeButton : ""
-          }`}
-        >
-          H1
-        </button>
+          <button
+            onClick={() =>
+              editor?.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("heading", { level: 1 })
+                ? styles.activeButton
+                : ""
+            }`}
+          >
+            H1
+          </button>
 
-        <button
-          onClick={() => editor?.chain().focus().toggleBulletList().run()}
-          className={`${styles.toolbarButton} ${
-            editor?.isActive("bulletList") ? styles.activeButton : ""
-          }`}
-        >
-          <img src={`${publicUrl}assets/list.png`} />
+          <button
+            onClick={() =>
+              editor?.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("heading", { level: 2 })
+                ? styles.activeButton
+                : ""
+            }`}
+          >
+            H2
+          </button>
+
+          <button
+            onClick={() => editor?.chain().focus().toggleBulletList().run()}
+            className={`${styles.toolbarButton} ${
+              editor?.isActive("bulletList") ? styles.activeButton : ""
+            }`}
+          >
+            <img src={`${publicUrl}assets/list.png`} />
+          </button>
+        </div>
+
+        <div className={styles.editorContainer}>
+          <EditorContent editor={editor} />
+        </div>
+
+        <button className={styles.submitButton} onClick={handleSubmit}>
+          Publish Blog
         </button>
       </div>
-
-      <div className={styles.editorContainer}>
-        <EditorContent editor={editor} />
-      </div>
-
-      <button className={styles.submitButton} onClick={handleSubmit}>
-        Publish Blog
-      </button>
     </div>
   );
 }

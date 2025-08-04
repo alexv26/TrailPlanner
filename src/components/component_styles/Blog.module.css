@@ -1,0 +1,77 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: var(--color-tile-background);
+  color: var(--color-tile-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  min-height: 300px;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px 20px 10px;
+  flex: 1; /* fill remaining space under the image */
+  justify-content: space-between; /* pushes readMore to bottom */
+  text-align: left;
+}
+
+.content {
+  /* No special rules needed; this groups title + body */
+}
+
+.text .link {
+  color: white;
+  text-decoration: none;
+}
+
+.text .readMore {
+  color: white;
+  font-weight: 600;
+  padding-top: 10px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.tile img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.tile h3 {
+  margin: 1rem 0 0 0;
+  font-size: 1.3rem;
+}
+
+.tile p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.tile img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px 8px 0 0;
+}
+
+.tile h3 {
+  margin: 1rem 0 0 0;
+  font-size: 1.3rem;
+}
+
+.tile h3 {
+  margin: 1rem 0 0 0;
+  font-size: 1.3rem;
+}
+
+.tile p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
