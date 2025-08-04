@@ -12,8 +12,6 @@ export default function ExplorePastTrips() {
   const [tilesPerPage, setTilesPerPage] = useState(() => {
     const tileWidth = 250;
     const windowSize = window.innerWidth;
-    console.log("Window size:", windowSize);
-    console.log("Tiles per page:", Math.floor(windowSize / tileWidth) * 2);
     return Math.floor(windowSize / tileWidth) * 2;
   }); // tile width = 250px, call it 300 to be safe. with two rows, should be able to fit
   const [searchBarVisible, setSearchBarVisible] = useState(true);
@@ -51,7 +49,7 @@ export default function ExplorePastTrips() {
   */
   useEffect(() => {
     const handleResize = () => {
-      const tileWidth = 290;
+      const tileWidth = 250;
       const windowSize = window.innerWidth;
       const tpp = Math.floor(windowSize / tileWidth) * 2;
       setTilesPerPage(tpp);

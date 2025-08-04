@@ -43,7 +43,7 @@
   justify-content: left;
   align-items: center;
   font-size: 30px;
-  color: limegreen;
+  color: lime;
 }
 
 /* Left section: Logo + nav links */
@@ -72,18 +72,17 @@
 .links ul li {
   display: inline;
 }
-
-.linksDropdownButton {
+/* Ensure hamburger only shows on small screens */
+.hamburgerMenu {
   display: none;
-  font-size: 1.8rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: white;
-  position: relative;
-  transform: none;
-  top: auto;
-  right: auto;
+  width: 3rem; /* or 48px */
+  justify-content: center;
+}
+
+@media (max-width: 1016px) {
+  .hamburgerMenu {
+    display: flex !important;
+  }
 }
 
 @media (max-width: 1016px) {

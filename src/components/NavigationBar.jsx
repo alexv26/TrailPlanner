@@ -1,6 +1,8 @@
+// NavigationBar.jsx
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { UserCircle } from "lucide-react";
+import HamburgerMenu from "./HamburgerMenu";
 
 import styles from "./component_styles/NavigationBar.module.css";
 import { useAuth } from "./AuthProvider";
@@ -34,6 +36,17 @@ function NavigationBar() {
     }
   }, [linksDropdownOpen]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1016) {
+        setLinksDropdownOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <>
       <div className={styles.container}>
@@ -43,12 +56,12 @@ function NavigationBar() {
           </div>
         </div>
         <div className={styles.linksWrapper}>
-          <button
-            className={styles.linksDropdownButton}
-            onClick={() => setLinksDropdownOpen(!linksDropdownOpen)}
-          >
-            ☰
-          </button>
+          <div className={styles.hamburgerMenu}>
+            <HamburgerMenu
+              state={linksDropdownOpen}
+              setState={setLinksDropdownOpen}
+            />
+          </div>
           <div
             className={`${styles.links} ${
               linksDropdownOpen ? styles.linksDropdownOpen : ""

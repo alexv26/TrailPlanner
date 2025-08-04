@@ -1,0 +1,41 @@
+.wrapper {
+  width: fit-content;
+  cursor: pointer;
+}
+
+/* "relative h-20 w-20 rounded-full bg-white/0 transition-colors hover:bg-white/20" */
+.hamburgerButton {
+  position: relative;
+  height: 3rem;
+  width: fit-content;
+  background-color: transparent;
+  border: none;
+  /* transition-colors */
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* "absolute h-1 w-10 bg-white" */
+.topBar {
+  position: absolute;
+  height: 0.2rem;
+  width: 2rem;
+  background-color: white;
+}
+
+/* "absolute h-1 w-10 bg-white" */
+.midBar {
+  position: absolute;
+  height: 0.2rem;
+  width: 2rem;
+  background-color: white;
+}
+
+/* "absolute h-1 w-5 bg-white" */
+.bottomBar {
+  position: absolute;
+  height: 0.2rem;
+  width: 0.75rem;
+  background-color: white;
+}

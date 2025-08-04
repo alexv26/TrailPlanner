@@ -57,6 +57,7 @@ export default function TripDetails() {
   return (
     <div className={styles.tripDetailsContainer}>
       <div className={styles.tile}>
+        <h1 className={styles.title}>{trip["tripName"]}</h1>
         <div className={`${styles.buttons} hide-when-printing`}>
           <button
             onClick={() => navigate(from)}
@@ -77,8 +78,6 @@ export default function TripDetails() {
             Print Trip Plan
           </button>
         </div>
-
-        <h1 className={styles.title}>{trip["tripName"]}</h1>
         {Object.entries(formFields).map(([pageTitle, fields]) => (
           <div key={pageTitle}>
             {Object.entries(fields).map(([fieldKey, fieldData]) => {
