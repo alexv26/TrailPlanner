@@ -142,48 +142,6 @@ export default function CreatePlan() {
     return `${randomNum}.jpg`;
   }
 
-  async function fetchTrailheadInfo(trailName) {
-    if (!trailName) {
-      console.warn("No trail name provided.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/trails/info?name=${encodeURIComponent(trailName)}`
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(
-          "Server responded with error:",
-          data.error || response.statusText
-        );
-        return;
-      }
-
-      if (data && (data.name || data.address)) {
-        const fullTrailheadAddress = `${data.location.lat},${data.location.lng}\n${data.address}`;
-        setFormData((prev) => ({
-          ...prev,
-          trailheadAddress: fullTrailheadAddress || "",
-        }));
-      } else {
-        console.warn("No trailhead data returned. Using fallback name.");
-        setFormData((prev) => ({
-          ...prev,
-          trailhead: trailName,
-          trailheadAddress: "",
-        }));
-      }
-    } catch (err) {
-      console.error("Fetch failed:", err.message);
-    }
-  }
-
   function sortHospitals(hospitals, lat, lng) {
     function haversine(lat1, lng1, lat2, lng2) {
       const R = 3958.8; // Earth radius in miles
@@ -236,55 +194,6 @@ export default function CreatePlan() {
       2
     )} miles\nRating: ${hospital.rating}`;
     return text;
-  }
-
-  async function fetchNearestHospitals(trailheadAddress) {
-    if (!trailheadAddress) {
-      console.warn("No trail address provided.");
-      return;
-    }
-
-    try {
-      // Split by newline to separate coordinates from address
-      const [coords] = trailheadAddress.split("\n");
-
-      // Split coordinates by comma
-      const [lat, lng] = coords.split(",");
-
-      // Now lat and lng are separate variables
-
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/api/healthcare/nearby-hospitals?lat=${lat}&lng=${lng}`
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        console.error(
-          "Server responded with error:",
-          data.error || response.statusText
-        );
-        return;
-      }
-      if (data) {
-        // Sort data in accordance to distance:
-        const sortedData = sortHospitals(data, lat, lng);
-        // return top 5 hospitals
-
-        const topFiveHospitalsText = sortedData
-          .slice(0, 5) // Get the first 5 hospitals
-          .map((_, index) => formatHospitalText(sortedData, index)) // Format each one
-          .join("\n\n"); // Add spacing between each hospital
-        setFormData((prev) => ({
-          ...prev,
-          nearestHospital: topFiveHospitalsText || "",
-        }));
-      }
-    } catch (err) {
-      console.error("Fetch failed:", err.message);
-    }
   }
 
   async function generateMealPlan() {
@@ -478,32 +387,142 @@ export default function CreatePlan() {
     }
   };
 
-  // TODO: Implement APIs
-  useEffect(() => {
-    const name = formData.trailhead;
-    if (page !== 4 || !name || name.length < 3 || formData.trailheadAddress)
+  /* ===== AUTOMATION ===== */
+  async function fetchTrailheadInfo(trailName) {
+    if (!trailName) {
+      console.warn("No trail name provided.");
       return;
+    }
 
-    const delay = 800;
-    const handler = setTimeout(() => {
-      fetchTrailheadInfo(name);
-    }, delay);
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/trails/info?name=${encodeURIComponent(trailName)}`
+      );
 
-    return () => clearTimeout(handler);
-  }, [formData.trailhead, page]);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Server responded with error:",
+          data.error || response.statusText
+        );
+        return;
+      }
+
+      if (data && (data.name || data.address)) {
+        const fullTrailheadAddress = `${data.location.lat},${data.location.lng}\n${data.address}`;
+        setFormData((prev) => ({
+          ...prev,
+          trailheadAddress: fullTrailheadAddress || "",
+        }));
+      } else {
+        console.warn("No trailhead data returned. Using fallback name.");
+        setFormData((prev) => ({
+          ...prev,
+          trailhead: trailName,
+          trailheadAddress: "",
+        }));
+      }
+    } catch (err) {
+      console.error("Fetch failed:", err.message);
+    }
+  }
+
+  async function fetchNearestHospitals(trailheadAddress) {
+    if (!trailheadAddress) {
+      console.warn("No trail address provided.");
+      return;
+    }
+
+    try {
+      // Split by newline to separate coordinates from address
+      const [coords] = trailheadAddress.split("\n");
+
+      // Split coordinates by comma
+      const [lat, lng] = coords.split(",");
+
+      // Now lat and lng are separate variables
+
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/api/healthcare/nearby-hospitals?lat=${lat}&lng=${lng}`
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(
+          "Server responded with error:",
+          data.error || response.statusText
+        );
+        return;
+      }
+      if (data) {
+        // Sort data in accordance to distance:
+        const sortedData = sortHospitals(data, lat, lng);
+        // return top 5 hospitals
+
+        const topFiveHospitalsText = sortedData
+          .slice(0, 5) // Get the first 5 hospitals
+          .map((_, index) => formatHospitalText(sortedData, index)) // Format each one
+          .join("\n\n"); // Add spacing between each hospital
+        setFormData((prev) => ({
+          ...prev,
+          nearestHospitals: topFiveHospitalsText || "",
+        }));
+      }
+    } catch (err) {
+      console.error("Fetch failed:", err.message);
+    }
+  }
 
   const hasFetchedHospitals = useRef(false);
+
   useEffect(() => {
-    if (
-      page === 7 &&
-      formData.trailheadAddress &&
-      !hasFetchedHospitals.current &&
-      !formData.nearestHospital
-    ) {
-      fetchNearestHospitals(formData.trailheadAddress);
-      hasFetchedHospitals.current = true;
-    }
-  }, [page, formData.trailheadAddress]);
+    const automatedFields = Object.entries(formFields[page] || {})
+      .filter(([_, field]) => field.automation)
+      .map(([key, field]) => ({ key, automation: field.automation }));
+
+    let debounceTimer;
+
+    automatedFields.forEach(({ key, automation }) => {
+      const value = formData[key];
+
+      // Immediate automation for hospitals
+      if (
+        automation === "fetchNearestHospitals" &&
+        !hasFetchedHospitals.current &&
+        !formData.nearestHospitals &&
+        formData.trailheadAddress
+      ) {
+        fetchNearestHospitals(formData.trailheadAddress);
+        hasFetchedHospitals.current = true;
+      }
+
+      // Debounced automation for trailhead address
+      if (automation === "fetchTrailheadAddress") {
+        if (
+          page !== 4 ||
+          !formData.trailhead ||
+          formData.trailhead.length < 3 ||
+          formData.trailheadAddress
+        ) {
+          return;
+        }
+
+        debounceTimer = setTimeout(() => {
+          fetchTrailheadInfo(formData.trailhead);
+        }, 5000); // Debounce delay
+      }
+    });
+
+    return () => {
+      if (debounceTimer) clearTimeout(debounceTimer);
+    };
+  }, [page, formData]);
 
   return (
     <div className={styles.formContainer}>

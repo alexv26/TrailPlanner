@@ -94,7 +94,8 @@
       "label": "Trailhead Address",
       "type": "textarea",
       "placeholder": "123 Trailhead Rd, Franconia, NH",
-      "required": true
+      "required": true,
+      "automation": "fetchTrailheadAddress"
     },
     "distanceGain": {
       "label": "Distance (mi)",
@@ -161,6 +162,13 @@
   },
   "7": {
     "header": "Safety & Emergency Plan",
+    "nearestHospitals": {
+      "label": "Nearest Hospitals",
+      "type": "textarea",
+      "rows": 3,
+      "placeholder": "Hospital 1, addr: ...\nHospital 2, addr: ...\nHospital 3, addr: ...",
+      "automation": "fetchNearestHospitals"
+    },
     "weatherPlan": {
       "label": "Weather Contingency Plan",
       "type": "textarea",
